@@ -1,0 +1,35 @@
+<div class="row  mt-5">
+  <div class="col-md-4 p-4 border text-center ">
+    <h1 class="heading ">Coronavirus (COVID-19) Stats</h1>
+    <div class="d-flex justify-content-center">
+      <div class="card shadow" style="width: 20rem; height:auto ;">
+        <div class="card-body">
+          <h5 class="card-title">Current Status</h5>
+          <p class="card-text">
+            Total Confirmed Cases:
+          </p>
+          <p class="card-text  data">{{ data.confirmed }}</p>
+          <br />
+          <p class="card-text">
+            Total Deaths:
+          </p>
+          <p class="card-text  data">{{ data.deaths }}</p>
+          <br />
+          <p class="card-text">
+            Total Recovered:
+          </p>
+          <p class="card-text  data">{{ data.recovered }}</p>
+          <br />
+
+          <a href="#" class="btn btn-primary">Know More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 ">
+    <app-latest-data></app-latest-data>
+  </div>
+  <!-- <div class="col-md-8  border text-center">
+    <div class="graph"><canvas id="barChart"></canvas></div>
+  </div> -->
+</div>

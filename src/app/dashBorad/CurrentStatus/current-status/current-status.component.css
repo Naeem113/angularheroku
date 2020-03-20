@@ -1,0 +1,12 @@
+.heading {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 30px;
+}
+.card-title {
+  font-size: 22px;
+  font-weight: bolder;
+}
+.data {
+  font-weight: bolder;
+  font-size: 18px;
+}
