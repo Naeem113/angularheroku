@@ -20,7 +20,8 @@ interface data {
 })
 export class LatestDataComponent implements OnInit {
   csvRecords: data;
-  csv: string;
+  URL: string =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-20-2020.csv";
   constructor(private http: HttpClient, private papa: Papa) {}
 
   ngOnInit(): void {
@@ -28,26 +29,19 @@ export class LatestDataComponent implements OnInit {
   }
 
   getlocation() {
-    return this.http
-      .get(
-        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-19-2020.csv",
-        { responseType: "text" }
-      )
-      .subscribe(
-        res => {
-          this.csv = res;
-          // console.log(this.csv);
-          this.papa.parse(this.csv, {
-            header: true,
-            complete: result => {
-              console.log("Parsed: ", result.data[0]);
-              this.csvRecords = result.data;
-            }
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    return this.http.get(this.URL, { responseType: "text" }).subscribe(
+      res => {
+        this.papa.parse(res, {
+          header: true,
+          complete: result => {
+            console.log("Parsed: ", result.data[0]);
+            this.csvRecords = result.data;
+          }
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }
