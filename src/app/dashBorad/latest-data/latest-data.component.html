@@ -1,34 +1,53 @@
 <div class="row">
-  <div class="col">
-    <div class="table-wrapper-scroll-y my-custom-scrollbar border">
-      <table class="table table-hover ">
-        <thead class="bg-light">
+  <div class="col-md-12 px-4 py-2  ">
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+      <input
+        class="form-control mr-sm-2 input"
+        type="search"
+        placeholder="Search by Country..."
+        aria-label="Search"
+        [(ngModel)]="search"
+        name="Search"
+      />
+    </nav>
+    <div class="table-responsive">
+      <table class="table table-hover border ">
+        <thead class="bg-dark text-light ">
           <tr>
-            <th scope="col">#</th>
+            <!-- <th scope="col">#</th> -->
             <th scope="col">Province/State</th>
             <th scope="col">Country/Region</th>
             <th scope="col">Confirmed</th>
             <th scope="col">Deaths</th>
             <th scope="col">Recovered</th>
-            <th scope="col">Latitude</th>
-            <th scope="col">Longitude</th>
-            <th scope="col">Last Update</th>
+            <!-- <th scope="col">Latitude</th> -->
+            <!-- <th scope="col">Longitude</th> -->
+            <!-- <th scope="col">Last Update</th> -->
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of csvRecords; index as i">
-            <th scope="row">{{ i + 1 }}</th>
+          <tr
+            (click)="abc(i)"
+            *ngFor="
+              let item of rec
+                | filter: search
+                | paginate: { itemsPerPage: 9, currentPage: page };
+              index as i
+            "
+          >
+            <!-- <th scope="row">{{ i + 1 }}</th> -->
             <td>{{ item["Province/State"] }}</td>
             <td>{{ item["Country/Region"] }}</td>
             <td>{{ item.Confirmed }}</td>
             <td>{{ item.Deaths }}</td>
             <td>{{ item.Recovered }}</td>
-            <td>{{ item.Latitude }}</td>
-            <td>{{ item.Longitude }}</td>
-            <td>{{ item["Last Update"] }}</td>
+            <!-- <td>{{ item.Latitude }}</td> -->
+            <!-- <td>{{ item.Longitude }}</td> -->
+            <!-- <td>{{ item["Last Update"] }}</td> -->
           </tr>
         </tbody>
       </table>
     </div>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
   </div>
 </div>

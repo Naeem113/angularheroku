@@ -10,9 +10,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {}
   showNav: boolean = false;
-  navbarLinks: boolean = true;
+
   toggleOpen() {
     this.showNav = true;
   }
-  t;
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { AppServicesService } from "src/app/service/app-services.service";
 
 interface latest {
-  latest: latest;
+  // latest: latest;
   confirmed: number;
   deaths: number;
   recovered: number;
@@ -14,24 +14,61 @@ interface latest {
   styleUrls: ["./current-status.component.css"]
 })
 export class CurrentStatusComponent implements OnInit {
-  constructor(private http: HttpClient) {}
-
-  url: string = "https://coronavirus-tracker-api.herokuapp.com/v2/latest";
   data: latest;
-  Confirmed: number;
-  deaths: number;
-  recovered: number;
+  single: any[];
+
+  constructor(private _serviceData: AppServicesService) {}
 
   ngOnInit(): void {
-    this.getData();
+    this.setLocalStorage();
   }
+  setLocalStorage() {
+    if (localStorage.getItem("LatestData") === null) {
+      this._serviceData.getData().subscribe(res => {
+        localStorage.setItem("LatestData", JSON.stringify(res.latest));
+        this.data = JSON.parse(localStorage.getItem("LatestData"));
+        this.single = [
+          {
+            name: "Total Confirmed Cases",
+            value: this.data.confirmed
+          },
+          {
+            name: "Total Recoverd",
+            value: this.data.recovered
+          },
+          {
+            name: "Total Deaths",
+            value: this.data.deaths
+          }
+        ];
+      });
+    } else {
+      this.data = JSON.parse(localStorage.getItem("LatestData"));
 
-  getData() {
-    return this.http.get<latest>(this.url).subscribe(res => {
-      this.data = res.latest;
-      this.Confirmed = this.data.confirmed;
-      this.deaths = this.data.deaths;
-      this.recovered = this.data.recovered;
-    });
+      this.single = [
+        {
+          name: "Total Confirmed Cases",
+          value: this.data.confirmed
+        },
+        {
+          name: "Total Recoverd",
+          value: this.data.recovered
+        },
+        {
+          name: "Total Deaths",
+          value: this.data.deaths
+        }
+      ];
+    }
+  }
+  view: any[] = [280, 400];
+
+  colorScheme = {
+    domain: ["#C7B42C", "#5AA454", "#A10A28"]
+  };
+  cardColor: string = "E3EFFF";
+
+  onSelect(event) {
+    console.log(event);
   }
 }

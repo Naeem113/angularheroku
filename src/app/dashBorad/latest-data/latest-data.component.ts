@@ -1,17 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 import { Papa } from "ngx-papaparse";
-
-interface data {
-  Confirmed: number;
-  ["Province/State"]: string;
-  Deaths: number;
-  ["Last Update"]: number;
-  Latitude: number;
-  Longitude: number;
-  ["Country/Region"]: String;
-  Recovered: number;
-}
+import { AppServicesService } from "src/app/service/app-services.service";
 
 @Component({
   selector: "app-latest-data",
@@ -19,29 +8,36 @@ interface data {
   styleUrls: ["./latest-data.component.css"]
 })
 export class LatestDataComponent implements OnInit {
-  csvRecords: data;
-  URL: string =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-20-2020.csv";
-  constructor(private http: HttpClient, private papa: Papa) {}
+  rec = [];
+  search: string = "";
+  page: number = 1;
+
+  constructor(private papa: Papa, private _dataService: AppServicesService) {}
 
   ngOnInit(): void {
-    this.getlocation();
+    this.setLocalStorage();
   }
 
-  getlocation() {
-    return this.http.get(this.URL, { responseType: "text" }).subscribe(
-      res => {
+  abc(index) {
+    console.log(index);
+    console.log(this.rec[index]);
+  }
+
+  setLocalStorage() {
+    if (localStorage.getItem("data") === null) {
+      this._dataService.getLocData().subscribe(res => {
         this.papa.parse(res, {
           header: true,
           complete: result => {
-            console.log("Parsed: ", result.data[0]);
-            this.csvRecords = result.data;
+            localStorage.setItem("data", JSON.stringify(result.data));
+            this.rec = JSON.parse(localStorage.getItem("data"));
+            console.log("newSet LocalStorage");
           }
         });
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      });
+    } else {
+      this.rec = JSON.parse(localStorage.getItem("data"));
+      console.log("OldRead LocalStorage");
+    }
   }
 }
