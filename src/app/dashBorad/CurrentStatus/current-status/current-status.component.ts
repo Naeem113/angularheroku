@@ -21,9 +21,9 @@ export class CurrentStatusComponent implements OnInit {
 
   minDate: Date;
   maxDate: Date;
-  confirmedCases: number;
-  recoveredCases: number;
-  deathsCases: number;
+  // confirmedCases: number;
+  // recoveredCases: number;
+  // deathsCases: number;
   currentDate = new Date(
     new Date().setDate(new Date().getDate() - 1)
   ).toLocaleDateString();
@@ -37,12 +37,12 @@ export class CurrentStatusComponent implements OnInit {
     this.getConfirmedCasesDetail();
     this.getDeathsCasesDetail();
     this.getRecoveredCasesDetail();
-    this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
-    this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
-    this.recoveredCases = this.RecoveredCases(
-      "Recovered",
-      this.dateForRecovered.slice(0, -2)
-    );
+    // this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
+    // this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
+    // this.recoveredCases = this.RecoveredCases(
+    //   "Recovered",
+    //   this.dateForRecovered.slice(0, -2)
+    // );
   }
   showDate: string;
   DataStats: boolean;
@@ -53,11 +53,10 @@ export class CurrentStatusComponent implements OnInit {
   SetCurrentStats() {
     this.DataStats = false;
     this.CurrentStats = true;
-    this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
-    this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
-    this.recoveredCases = this.RecoveredCases(
-      "Recovered",
-      this.dateForRecovered.slice(0, -2)
+    this.single = this.newFunction(
+      this.Cases("Confrm", this.currentDate.slice(0, -2)),
+      this.Cases("Deaths", this.currentDate.slice(0, -2)),
+      this.RecoveredCases("Recovered", this.dateForRecovered.slice(0, -2))
     );
   }
 
@@ -73,9 +72,11 @@ export class CurrentStatusComponent implements OnInit {
       let sel: string = event.value.slice(1, -2);
       if (this.showDate.charAt(3) === "0")
         sel = sel.substring(0, 2) + sel.substring(3, sel.length);
-      this.confirmedCases = this.Cases("Confrm", sel);
-      this.deathsCases = this.Cases("Deaths", sel);
-      this.recoveredCases = this.RecoveredCases("Recovered", sel);
+      this.single = this.newFunction(
+        this.Cases("Confrm", sel),
+        this.Cases("Deaths", sel),
+        this.RecoveredCases("Recovered", sel)
+      );
     }
   }
 
@@ -150,30 +151,52 @@ export class CurrentStatusComponent implements OnInit {
     return Cases;
   }
 
+  // ************************** Function to pass Dashboard Chart *****************************//
+
+  newFunction(value1, value2, value3) {
+    return [
+      {
+        name: "Total Confirmed Cases",
+        value: value1
+      },
+      {
+        name: "Total Recoverd",
+        value: value2
+      },
+      {
+        name: "Total Deaths",
+        value: value3
+      }
+    ];
+  }
+
   // ************************************   Dashboard Chart Data  *********************************//
 
-  // single = [
-  //   {
-  //     name: "Total Confirmed Cases",
-  //     value: this.con
-  //   },
-  //   {
-  //     name: "Total Recoverd",
-  //     value: this.RecoveredCases("Recovered", "3/23/20")
-  //   },
-  //   {
-  //     name: "Total Deaths",
-  //     value: this.Cases("Deaths", "3/24/20")
-  //   }
-  // ];
-  // view: any[] = [280, 400];
+  single = [
+    {
+      name: "Total Confirmed Cases",
+      value: this.Cases("Confrm", this.currentDate.slice(0, -2))
+    },
+    {
+      name: "Total Recoverd",
+      value: this.RecoveredCases(
+        "Recovered",
+        this.dateForRecovered.slice(0, -2)
+      )
+    },
+    {
+      name: "Total Deaths",
+      value: this.Cases("Deaths", this.currentDate.slice(0, -2))
+    }
+  ];
+  view: any[] = [280, 400];
 
-  // colorScheme = {
-  //   domain: ["#C7B42C", "#5AA454", "#A10A28"]
-  // };
-  // cardColor: string = "E3EFFF";
+  colorScheme = {
+    domain: ["#C7B42C", "#5AA454", "#A10A28"]
+  };
+  cardColor: string = "E3EFFF";
 
-  // onSelect(event) {
-  //   console.log(event);
-  // }
+  onSelect(event) {
+    console.log(event);
+  }
 }

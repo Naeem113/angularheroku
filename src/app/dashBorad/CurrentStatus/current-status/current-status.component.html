@@ -1,17 +1,16 @@
-<div class="container">
-  <div class="row images  d-flex justify-content-center ">
-    <div class="col-md-12 p-4  text-center ">
-      <h1 class="heading ">Coronavirus (COVID-19) Global Stats</h1>
-      <div class="d-flex justify-content-center text-center">
-        <div class="card shadow rounded" style="width: 19rem; height:auto ;">
-          <div class="card-body">
-            <h5 class="card-title" *ngIf="CurrentStats">
-              Current Stats
-            </h5>
-            <h5 class="card-title" *ngIf="DataStats">
-              {{ showDate }}
-            </h5>
-            <br />
+<div class="row images  d-flex justify-content-center h-100 d-inline-block">
+  <div class="col-md-12 p-4  text-center ">
+    <h1 class="heading ">Coronavirus (COVID-19) Global Stats</h1>
+    <div class="d-flex justify-content-center text-center">
+      <div class="card shadow rounded" style="width: 19rem; height:auto ;">
+        <div class="card-body">
+          <h5 class="card-title" *ngIf="CurrentStats">
+            Current Stats
+          </h5>
+          <h5 class="card-title" *ngIf="DataStats">
+            {{ showDate }}
+          </h5>
+          <!-- <br />
             <p class="card-text-text">
               Total Confirmed Cases
             </p>
@@ -26,11 +25,46 @@
               Total Deaths
             </p>
             <p class="abc death">{{ deathsCases }}</p>
-            <br />
+            <br /> -->
+          <ngx-charts-number-card
+            class="chart"
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="single"
+            [cardColor]="cardColor"
+            (select)="onSelect($event)"
+          >
+          </ngx-charts-number-card>
 
-            <div class="col-xs-12 col-12 col-sm-6 col-md-12 form-group">
+          <div class="col-xs-12 col-12 col-sm-6 col-md-12 ">
+            <div class="input-group mb-3">
               <input
+                type="text"
+                ngModel
+                required
+                readonly
+                #info
+                bsDatepicker
+                value=""
+                [minDate]="minDate"
+                [maxDate]="maxDate"
                 class="form-control"
+                placeholder="Select Date..."
+                aria-describedby="button-addon2"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  id="button-addon2"
+                  (click)="CheckStats(info)"
+                >
+                  Check
+                </button>
+              </div>
+            </div>
+            <!-- <input
+                class="form-control col-12"
                 placeholder="Select date.."
                 ngModel
                 required
@@ -40,31 +74,20 @@
                 value=""
                 [minDate]="minDate"
                 [maxDate]="maxDate"
-              />
-            </div>
+              /><button
+                type="button"
+                class="btn btn-secondary col-sm-9 mt-2"
+                (click)="CheckStats(info)"
+              >
+                Check
+              </button> -->
             <button
               type="button"
-              class="btn btn-primary col-sm-4"
-              (click)="CheckStats(info)"
-            >
-              Check</button
-            ><button
-              type="button"
-              class="btn btn-primary col-sm-9 mt-2"
+              class="btn btn-secondary col-sm-9 mt-2"
               (click)="SetCurrentStats()"
             >
               Refresh
             </button>
-
-            <!-- <ngx-charts-number-card
-              class="chart"
-              [view]="view"
-              [scheme]="colorScheme"
-              [results]="single"
-              [cardColor]="cardColor"
-              (select)="onSelect($event)"
-            >
-            </ngx-charts-number-card> -->
           </div>
         </div>
       </div>
