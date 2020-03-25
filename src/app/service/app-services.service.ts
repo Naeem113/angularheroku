@@ -28,13 +28,26 @@ export class AppServicesService {
     "-" +
     this.currentDay +
     "-2020.csv";
+  ConfirmedCases_URL: string =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+
+  DeathsCases_URL: string =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+
+  RecoveredCases_URL: string =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv";
 
   constructor(private http: HttpClient) {}
 
-  getData(): Observable<latest> {
-    return this.http.get<latest>(
-      "https://coronavirus-tracker-api.herokuapp.com/v2/latest"
-    );
+  getConfirmedData() {
+    return this.http.get(this.ConfirmedCases_URL, { responseType: "text" });
+  }
+
+  getDeathsData() {
+    return this.http.get(this.DeathsCases_URL, { responseType: "text" });
+  }
+  getRecoveredData() {
+    return this.http.get(this.RecoveredCases_URL, { responseType: "text" });
   }
 
   getLocData() {

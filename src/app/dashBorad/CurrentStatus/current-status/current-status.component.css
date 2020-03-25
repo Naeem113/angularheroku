@@ -5,18 +5,39 @@
 .card-title {
   font-size: 27px;
   font-weight: bolder;
-  color: white;
-  text-shadow: 10px 10px 10px black;
+  color: #0073ee;
+}
+.card-text-text {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+}
+.confrm {
+  color: yellow;
+}
+
+.recover {
+  color: rgb(65, 228, 65);
+}
+.death {
+  color: red;
+}
+.abc {
+  font-weight: bolder;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif,
+    "Lucida Sans", Arial, sans-serif;
+
+  font-size: 38px;
+  text-shadow: 2px 2px 2px black;
 }
 .ngx-charts-number-card {
   margin-left: 100px;
 }
 .card {
-  background: rgba(33, 37, 41, 0.5);
+  background: rgba(171, 205, 240, 0.9);
 }
 .row {
-  /* height: 89.9vh; */
-  height: auto;
+  /* height: auto; */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -62,6 +83,9 @@
 /* Desktops and laptops ----------- */
 @media only screen and (min-width: 1224px) {
   /* Styles */
+  .row {
+    height: 91.9vh;
+  }
 }
 
 /* Large screens ----------- */

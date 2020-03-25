@@ -12,16 +12,16 @@ import { LatestDataComponent } from "./dashBorad/latest-data/latest-data.compone
 import { FormsModule } from "@angular/forms";
 import { Ng2SearchPipeModule } from "ng2-search-filter";
 import { NgxPaginationModule } from "ngx-pagination";
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { ChartsComponent } from './dashBorad/charts/charts.component';
-
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NgOrderByPipeModule } from "angular-pipes";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+// import { BsDatepickerModule } from "ngx-bootstrap";
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     CurrentStatusComponent,
-    LatestDataComponent,
-    ChartsComponent
+    LatestDataComponent
   ],
   imports: [
     HttpClientModule,
@@ -31,7 +31,10 @@ import { ChartsComponent } from './dashBorad/charts/charts.component';
     MaterailModule,
     FormsModule,
     Ng2SearchPipeModule,
-    NgxPaginationModule,NgxChartsModule
+    NgxPaginationModule,
+    NgxChartsModule,
+    NgOrderByPipeModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [AppServicesService],
   bootstrap: [AppComponent]

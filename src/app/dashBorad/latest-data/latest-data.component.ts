@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Papa } from "ngx-papaparse";
 import { AppServicesService } from "src/app/service/app-services.service";
+import { latestData } from "../../models/latestDataModel";
+import { from } from "rxjs";
 
 @Component({
   selector: "app-latest-data",
@@ -8,36 +10,36 @@ import { AppServicesService } from "src/app/service/app-services.service";
   styleUrls: ["./latest-data.component.css"]
 })
 export class LatestDataComponent implements OnInit {
-  rec = [];
+  APIdata: latestData[] = [];
+  date = new Date();
+  currentDate = this.date.toLocaleDateString();
   search: string = "";
   page: number = 1;
 
   constructor(private papa: Papa, private _dataService: AppServicesService) {}
 
   ngOnInit(): void {
-    this.setLocalStorage();
+    this.LatestData();
+    this.getStoreData();
   }
 
-  abc(index) {
-    console.log(index);
-    console.log(this.rec[index]);
+  getRow(province, country) {
+    console.log(country.innerText, province.innerText);
   }
 
-  setLocalStorage() {
-    if (localStorage.getItem("data") === null) {
-      this._dataService.getLocData().subscribe(res => {
-        this.papa.parse(res, {
-          header: true,
-          complete: result => {
-            localStorage.setItem("data", JSON.stringify(result.data));
-            this.rec = JSON.parse(localStorage.getItem("data"));
-            console.log("newSet LocalStorage");
-          }
-        });
+  LatestData() {
+    this._dataService.getLocData().subscribe(res => {
+      this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          // this.APIdata = result.data;
+          localStorage.setItem(this.currentDate, JSON.stringify(result.data));
+        }
       });
-    } else {
-      this.rec = JSON.parse(localStorage.getItem("data"));
-      console.log("OldRead LocalStorage");
-    }
+    });
+  }
+
+  getStoreData() {
+    this.APIdata = JSON.parse(localStorage.getItem(this.currentDate));
   }
 }

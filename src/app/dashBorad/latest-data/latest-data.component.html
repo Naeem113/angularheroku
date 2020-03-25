@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-12 px-4 py-2  ">
+  <div class="col-md-12  py-2  ">
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <input
         class="form-control mr-sm-2 input"
@@ -15,8 +15,8 @@
         <thead class="bg-dark text-light ">
           <tr>
             <!-- <th scope="col">#</th> -->
-            <th scope="col">Province/State</th>
             <th scope="col">Country/Region</th>
+            <th scope="col">Province/State</th>
             <th scope="col">Confirmed</th>
             <th scope="col">Deaths</th>
             <th scope="col">Recovered</th>
@@ -27,23 +27,25 @@
         </thead>
         <tbody>
           <tr
-            (click)="abc(i)"
+            (click)="getRow(info, info2)"
             *ngFor="
-              let item of rec
+              let item of APIdata
                 | filter: search
+                | orderBy: 'Country_Region'
                 | paginate: { itemsPerPage: 9, currentPage: page };
               index as i
             "
           >
             <!-- <th scope="row">{{ i + 1 }}</th> -->
-            <td>{{ item["Province/State"] }}</td>
-            <td>{{ item["Country/Region"] }}</td>
+            <td #info2>{{ item.Country_Region }}</td>
+
+            <td #info>{{ item.Province_State }}</td>
             <td>{{ item.Confirmed }}</td>
             <td>{{ item.Deaths }}</td>
             <td>{{ item.Recovered }}</td>
             <!-- <td>{{ item.Latitude }}</td> -->
             <!-- <td>{{ item.Longitude }}</td> -->
-            <!-- <td>{{ item["Last Update"] }}</td> -->
+            <!-- <td>{{ item.Last Update }}</td> -->
           </tr>
         </tbody>
       </table>

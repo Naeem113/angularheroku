@@ -1,12 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
-
-interface latest {
-  // latest: latest;
-  confirmed: number;
-  deaths: number;
-  recovered: number;
-}
+import { Papa } from "ngx-papaparse";
+// import { strict } from "assert";
+// import { log } from "util";
 
 @Component({
   selector: "app-current-status",
@@ -14,61 +10,170 @@ interface latest {
   styleUrls: ["./current-status.component.css"]
 })
 export class CurrentStatusComponent implements OnInit {
-  data: latest;
-  single: any[];
+  constructor(private papa: Papa, private _serviceData: AppServicesService) {
+    this.minDate = new Date();
+    this.maxDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() - 63);
+    this.maxDate.setDate(this.maxDate.getDate() - 1);
+  }
 
-  constructor(private _serviceData: AppServicesService) {}
+  // ***********************************  Variable Declaration  *******************************//
+
+  minDate: Date;
+  maxDate: Date;
+  confirmedCases: number;
+  recoveredCases: number;
+  deathsCases: number;
+  currentDate = new Date(
+    new Date().setDate(new Date().getDate() - 1)
+  ).toLocaleDateString();
+  dateForRecovered = new Date(
+    new Date().setDate(new Date().getDate() - 2)
+  ).toLocaleDateString();
+
+  // ****************************************  ngOnInit  ************************************//
 
   ngOnInit(): void {
-    this.setLocalStorage();
+    this.getConfirmedCasesDetail();
+    this.getDeathsCasesDetail();
+    this.getRecoveredCasesDetail();
+    this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
+    this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
+    this.recoveredCases = this.RecoveredCases(
+      "Recovered",
+      this.dateForRecovered.slice(0, -2)
+    );
   }
-  setLocalStorage() {
-    if (localStorage.getItem("LatestData") === null) {
-      this._serviceData.getData().subscribe(res => {
-        localStorage.setItem("LatestData", JSON.stringify(res.latest));
-        this.data = JSON.parse(localStorage.getItem("LatestData"));
-        this.single = [
-          {
-            name: "Total Confirmed Cases",
-            value: this.data.confirmed
-          },
-          {
-            name: "Total Recoverd",
-            value: this.data.recovered
-          },
-          {
-            name: "Total Deaths",
-            value: this.data.deaths
-          }
-        ];
-      });
-    } else {
-      this.data = JSON.parse(localStorage.getItem("LatestData"));
+  showDate: string;
+  DataStats: boolean;
+  CurrentStats: boolean = true;
 
-      this.single = [
-        {
-          name: "Total Confirmed Cases",
-          value: this.data.confirmed
-        },
-        {
-          name: "Total Recoverd",
-          value: this.data.recovered
-        },
-        {
-          name: "Total Deaths",
-          value: this.data.deaths
-        }
-      ];
+  // ********************************  When User Click on Refresh  *****************************//
+
+  SetCurrentStats() {
+    this.DataStats = false;
+    this.CurrentStats = true;
+    this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
+    this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
+    this.recoveredCases = this.RecoveredCases(
+      "Recovered",
+      this.dateForRecovered.slice(0, -2)
+    );
+  }
+
+  // ********************************  When User Submit Date  *********************************//
+
+  CheckStats(event) {
+    if (event.value === "") {
+      alert("please Insert Date");
+    } else {
+      this.CurrentStats = false;
+      this.DataStats = true;
+      this.showDate = event.value;
+      let sel: string = event.value.slice(1, -2);
+      if (this.showDate.charAt(3) === "0")
+        sel = sel.substring(0, 2) + sel.substring(3, sel.length);
+      this.confirmedCases = this.Cases("Confrm", sel);
+      this.deathsCases = this.Cases("Deaths", sel);
+      this.recoveredCases = this.RecoveredCases("Recovered", sel);
     }
   }
-  view: any[] = [280, 400];
 
-  colorScheme = {
-    domain: ["#C7B42C", "#5AA454", "#A10A28"]
-  };
-  cardColor: string = "E3EFFF";
+  // *****************************  Functions Get All Data from Service  ****************************//
 
-  onSelect(event) {
-    console.log(event);
+  getConfirmedCasesDetail() {
+    this._serviceData.getConfirmedData().subscribe(res => {
+      this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Confrm", JSON.stringify(result.data));
+        }
+      });
+    });
   }
+  getDeathsCasesDetail() {
+    this._serviceData.getDeathsData().subscribe(res => {
+      this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Deaths", JSON.stringify(result.data));
+        }
+      });
+    });
+  }
+  getRecoveredCasesDetail() {
+    this._serviceData.getRecoveredData().subscribe(res => {
+      this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Recovered", JSON.stringify(result.data));
+        }
+      });
+    });
+  }
+
+  // *************************  Functions Return Total Confrm & Deaths Cases  **************************//
+
+  Cases(data: string, date: string) {
+    let CasesData = JSON.parse(localStorage.getItem(data));
+    let Cases: number = 0;
+    for (let index = 0; index < CasesData.length; index++) {
+      Cases += parseInt(CasesData[index][date]);
+    }
+    return Cases;
+  }
+
+  // ***************************  Function Return Total Recovered Cases  ****************************//
+
+  RecoveredCases(data: string, date: string) {
+    let cleanArray = [];
+    let Cases = 0;
+
+    // *********************************  Get data from localStorage  ********************************//
+
+    let Data = JSON.parse(localStorage.getItem(data));
+
+    // ***************************   Filter array to remove blank spaces  ****************************//
+
+    for (let index = 0; index < Data.length; index++) {
+      if (Data[index][date] != "") {
+        cleanArray.push(Data[index][date]);
+      }
+    }
+
+    // *****************************   Filter array store to new Array  *****************************//
+
+    for (let i = 0; i < cleanArray.length - 1; i++) {
+      Cases = parseInt(cleanArray[i]) + Cases;
+    }
+
+    return Cases;
+  }
+
+  // ************************************   Dashboard Chart Data  *********************************//
+
+  // single = [
+  //   {
+  //     name: "Total Confirmed Cases",
+  //     value: this.con
+  //   },
+  //   {
+  //     name: "Total Recoverd",
+  //     value: this.RecoveredCases("Recovered", "3/23/20")
+  //   },
+  //   {
+  //     name: "Total Deaths",
+  //     value: this.Cases("Deaths", "3/24/20")
+  //   }
+  // ];
+  // view: any[] = [280, 400];
+
+  // colorScheme = {
+  //   domain: ["#C7B42C", "#5AA454", "#A10A28"]
+  // };
+  // cardColor: string = "E3EFFF";
+
+  // onSelect(event) {
+  //   console.log(event);
+  // }
 }
