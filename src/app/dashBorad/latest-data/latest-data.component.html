@@ -1,4 +1,5 @@
-<div class="row mt-5 py-2">
+<ngx-spinner></ngx-spinner>
+<div *ngIf="loading" class="row mt-5 py-2">
   <div class="col-md-12 px-4 py-2  ">
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <input
@@ -31,7 +32,7 @@
             *ngFor="
               let item of LoctionData
                 | filter: search
-                | orderBy: 'Country_Region'
+                | orderBy: '-Confirmed'
                 | paginate: { itemsPerPage: 9, currentPage: page };
               index as i
             "

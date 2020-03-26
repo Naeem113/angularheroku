@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Papa } from "ngx-papaparse";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { latestData } from "../../models/latestDataModel";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-latest-data",
@@ -13,6 +14,7 @@ export class LatestDataComponent implements OnInit {
   //                                           Variable Declaration                                               *
   // *************************************************************************************************************//
 
+  loading: boolean = false;
   LoctionData: latestData[] = [];
   date = new Date();
   currentDate = this.date.toLocaleDateString();
@@ -23,7 +25,11 @@ export class LatestDataComponent implements OnInit {
   //                                                Constructor                                                   *
   // *************************************************************************************************************//
 
-  constructor(private papa: Papa, private _dataService: AppServicesService) {}
+  constructor(
+    private papa: Papa,
+    private _dataService: AppServicesService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   // *************************************************************************************************************//
   //                                                 ngOnInit                                                     *
@@ -47,6 +53,7 @@ export class LatestDataComponent implements OnInit {
   allLocationData() {
     if (localStorage.getItem(this.currentDate)) {
       this.LoctionData = JSON.parse(localStorage.getItem(this.currentDate));
+      this.loading = true;
     } else {
       this._dataService.getLocationData().subscribe(res => {
         this.papa.parse(res, {
@@ -56,6 +63,11 @@ export class LatestDataComponent implements OnInit {
             this.LoctionData = JSON.parse(
               localStorage.getItem(this.currentDate)
             );
+            this.spinner.show();
+            setTimeout(() => {
+              this.spinner.hide();
+              this.loading = true;
+            }, 2000);
           }
         });
       });
