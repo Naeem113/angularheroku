@@ -15,7 +15,8 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgOrderByPipeModule } from "angular-pipes";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
-// import { BsDatepickerModule } from "ngx-bootstrap";
+import { NgxSpinnerModule } from "ngx-spinner";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     NgxPaginationModule,
     NgxChartsModule,
     NgOrderByPipeModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxSpinnerModule
   ],
   providers: [AppServicesService],
   bootstrap: [AppComponent]

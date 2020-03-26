@@ -7,11 +7,20 @@ import { Component, OnInit } from "@angular/core";
 })
 export class HeaderComponent implements OnInit {
   constructor() {}
-
-  ngOnInit(): void {}
+  closeButton: boolean = false;
+  OpenButton: boolean = true;
   showNav: boolean = false;
+  ngOnInit(): void {}
+
+  toggleClose() {
+    this.showNav = false;
+    this.OpenButton = true;
+    this.closeButton = false;
+  }
 
   toggleOpen() {
     this.showNav = true;
+    this.closeButton = true;
+    this.OpenButton = false;
   }
 }

@@ -42,6 +42,7 @@
     "ngx-csv-parser": "0.0.2",
     "ngx-pagination": "^5.0.0",
     "ngx-papaparse": "^4.0.4",
+    "ngx-spinner": "^9.0.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "typescript": "~3.7.5",

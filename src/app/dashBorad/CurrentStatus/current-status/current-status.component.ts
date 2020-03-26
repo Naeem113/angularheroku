@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { Papa } from "ngx-papaparse";
-// import { strict } from "assert";
-// import { log } from "util";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-current-status",
@@ -10,20 +9,36 @@ import { Papa } from "ngx-papaparse";
   styleUrls: ["./current-status.component.css"]
 })
 export class CurrentStatusComponent implements OnInit {
-  constructor(private papa: Papa, private _serviceData: AppServicesService) {
+  // *************************************************************************************************************//
+  //                                                Constructor                                                   *
+  // *************************************************************************************************************//
+
+  constructor(
+    private papa: Papa,
+    private _serviceData: AppServicesService,
+    private spinner: NgxSpinnerService
+  ) {
     this.minDate = new Date();
     this.maxDate = new Date();
-    this.minDate.setDate(this.minDate.getDate() - 63);
+    this.minDate.setDate(this.minDate.getDate() - 64);
     this.maxDate.setDate(this.maxDate.getDate() - 1);
   }
 
-  // ***********************************  Variable Declaration  *******************************//
+  // *************************************************************************************************************//
+  //                                             Variable Declaration                                             *
+  // *************************************************************************************************************//
+
+  expression: boolean = false;
 
   minDate: Date;
   maxDate: Date;
-  // confirmedCases: number;
-  // recoveredCases: number;
-  // deathsCases: number;
+  showDate: string;
+  DataStats: boolean;
+  CurrentStats: boolean = true;
+  confirmedCases: number;
+  recoveredCases: number;
+  deathsCases: number;
+
   currentDate = new Date(
     new Date().setDate(new Date().getDate() - 1)
   ).toLocaleDateString();
@@ -31,36 +46,26 @@ export class CurrentStatusComponent implements OnInit {
     new Date().setDate(new Date().getDate() - 2)
   ).toLocaleDateString();
 
-  // ****************************************  ngOnInit  ************************************//
+  // *************************************************************************************************************//
+  //                                                 ngOnInit                                                     *
+  // *************************************************************************************************************//
 
   ngOnInit(): void {
-    this.getConfirmedCasesDetail();
-    this.getDeathsCasesDetail();
-    this.getRecoveredCasesDetail();
-    // this.confirmedCases = this.Cases("Confrm", this.currentDate.slice(0, -2));
-    // this.deathsCases = this.Cases("Deaths", this.currentDate.slice(0, -2));
-    // this.recoveredCases = this.RecoveredCases(
-    //   "Recovered",
-    //   this.dateForRecovered.slice(0, -2)
-    // );
+    this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
+    this.totalRecoverdCases("Recovered", this.dateForRecovered);
+    this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
   }
-  showDate: string;
-  DataStats: boolean;
-  CurrentStats: boolean = true;
 
-  // ********************************  When User Click on Refresh  *****************************//
+  // *************************************************************************************************************//
+  //                                         When User Click on Refresh                                           *
+  // *************************************************************************************************************//
 
   SetCurrentStats() {
-    this.DataStats = false;
-    this.CurrentStats = true;
-    this.single = this.newFunction(
-      this.Cases("Confrm", this.currentDate.slice(0, -2)),
-      this.Cases("Deaths", this.currentDate.slice(0, -2)),
-      this.RecoveredCases("Recovered", this.dateForRecovered.slice(0, -2))
-    );
+    window.location.reload();
   }
-
-  // ********************************  When User Submit Date  *********************************//
+  // *************************************************************************************************************//
+  //                                         When User Submit Date                                                *
+  // *************************************************************************************************************//
 
   CheckStats(event) {
     if (event.value === "") {
@@ -69,126 +74,178 @@ export class CurrentStatusComponent implements OnInit {
       this.CurrentStats = false;
       this.DataStats = true;
       this.showDate = event.value;
-      let sel: string = event.value.slice(1, -2);
-      if (this.showDate.charAt(3) === "0")
-        sel = sel.substring(0, 2) + sel.substring(3, sel.length);
-      this.single = this.newFunction(
-        this.Cases("Confrm", sel),
-        this.Cases("Deaths", sel),
-        this.RecoveredCases("Recovered", sel)
+      let selectDate: string = event.value.slice(1, -2);
+      let selectDate2: string = event.value.slice(1);
+
+      if (this.showDate.charAt(3) === "0") {
+        selectDate2 =
+          selectDate2.substring(0, 2) +
+          selectDate2.substring(3, selectDate2.length);
+        selectDate =
+          selectDate.substring(0, 2) +
+          selectDate.substring(3, selectDate.length);
+      }
+      this.totalConfirmedCases("Confirmed", selectDate);
+      this.totalRecoverdCases("Recovered", selectDate2),
+        this.totalDeathsCases("Deaths", selectDate);
+      this.single = this.userRequiredData(
+        this.confirmedCases,
+        this.recoveredCases,
+        this.deathsCases
       );
     }
   }
 
-  // *****************************  Functions Get All Data from Service  ****************************//
+  // *************************************************************************************************************//
+  //                                      Functions Return Total Confirmed Cases                                   *
+  // *************************************************************************************************************//
 
-  getConfirmedCasesDetail() {
-    this._serviceData.getConfirmedData().subscribe(res => {
-      this.papa.parse(res, {
-        header: true,
-        complete: result => {
-          localStorage.setItem("Confrm", JSON.stringify(result.data));
-        }
-      });
-    });
-  }
-  getDeathsCasesDetail() {
-    this._serviceData.getDeathsData().subscribe(res => {
-      this.papa.parse(res, {
-        header: true,
-        complete: result => {
-          localStorage.setItem("Deaths", JSON.stringify(result.data));
-        }
-      });
-    });
-  }
-  getRecoveredCasesDetail() {
-    this._serviceData.getRecoveredData().subscribe(res => {
-      this.papa.parse(res, {
-        header: true,
-        complete: result => {
-          localStorage.setItem("Recovered", JSON.stringify(result.data));
-        }
-      });
-    });
-  }
-
-  // *************************  Functions Return Total Confrm & Deaths Cases  **************************//
-
-  Cases(data: string, date: string) {
-    let CasesData = JSON.parse(localStorage.getItem(data));
-    let Cases: number = 0;
-    for (let index = 0; index < CasesData.length; index++) {
-      Cases += parseInt(CasesData[index][date]);
-    }
-    return Cases;
-  }
-
-  // ***************************  Function Return Total Recovered Cases  ****************************//
-
-  RecoveredCases(data: string, date: string) {
-    let cleanArray = [];
-    let Cases = 0;
-
-    // *********************************  Get data from localStorage  ********************************//
-
-    let Data = JSON.parse(localStorage.getItem(data));
-
-    // ***************************   Filter array to remove blank spaces  ****************************//
-
-    for (let index = 0; index < Data.length; index++) {
-      if (Data[index][date] != "") {
-        cleanArray.push(Data[index][date]);
+  totalConfirmedCases(data: string, date: string) {
+    if (localStorage.getItem(data)) {
+      let Data = JSON.parse(localStorage.getItem(data));
+      let cases: number = 0;
+      for (let index = 0; index < Data.length - 1; index++) {
+        cases += parseInt(Data[index][date]);
       }
+      this.confirmedCases = cases;
+      this.single.push(this.setChartData(cases, "Total Confirmed Cases"));
+    } else {
+      this._serviceData.getConfirmedData().subscribe(res => {
+        let d = this.papa.parse(res, {
+          header: true,
+          complete: result => {
+            localStorage.setItem(data, JSON.stringify(result.data));
+            return result;
+          }
+        });
+
+        let cases: number = 0;
+        for (let index = 0; index < d.data.length - 1; index++) {
+          cases += parseInt(d.data[index][date]);
+        }
+
+        setTimeout(() => {
+          this.confirmedCases = cases;
+        }, 2000);
+
+        this.single.push(this.setChartData(cases, "Total Confirmed Cases"));
+      });
     }
-
-    // *****************************   Filter array store to new Array  *****************************//
-
-    for (let i = 0; i < cleanArray.length - 1; i++) {
-      Cases = parseInt(cleanArray[i]) + Cases;
-    }
-
-    return Cases;
   }
 
-  // ************************** Function to pass Dashboard Chart *****************************//
+  // *************************************************************************************************************//
+  //                                      Functions Return Total Recovered Cases                                  *
+  // *************************************************************************************************************//
 
-  newFunction(value1, value2, value3) {
+  totalRecoverdCases(keyName: string, date: string) {
+    if (localStorage.getItem(keyName)) {
+      let Data = JSON.parse(localStorage.getItem(keyName));
+      let cases: number = 0;
+      for (let index = 0; index < Data.length - 1; index++) {
+        cases += parseInt(Data[index][date]);
+      }
+      this.recoveredCases = cases;
+      this.single.push(this.setChartData(cases, "Total Recovered Cases"));
+    } else {
+      this._serviceData.getRecoveredData().subscribe(res => {
+        let d = this.papa.parse(res, {
+          header: true,
+          complete: result => {
+            localStorage.setItem(keyName, JSON.stringify(result.data));
+            return result;
+          }
+        });
+
+        let cases: number = 0;
+        for (let index = 0; index < d.data.length - 1; index++) {
+          cases += parseInt(d.data[index][date]);
+        }
+        setTimeout(() => {
+          this.deathsCases = cases;
+        }, 2000);
+        this.single.push(this.setChartData(cases, "Total Recovered Cases"));
+      });
+    }
+  }
+
+  // *************************************************************************************************************//
+  //                                         Functions Return Total Deaths                                        *
+  // *************************************************************************************************************//
+
+  totalDeathsCases(data: string, date: string) {
+    if (localStorage.getItem(data)) {
+      let Data = JSON.parse(localStorage.getItem(data));
+      let cases: number = 0;
+      for (let index = 0; index < Data.length - 1; index++) {
+        cases += parseInt(Data[index][date]);
+      }
+      this.deathsCases = cases;
+      this.single.push(this.setChartData(cases, "Total Deaths"));
+      this.expression = true;
+    } else {
+      this._serviceData.getDeathsData().subscribe(res => {
+        let d = this.papa.parse(res, {
+          header: true,
+          complete: result => {
+            localStorage.setItem(data, JSON.stringify(result.data));
+            return result;
+          }
+        });
+
+        let cases: number = 0;
+        for (let index = 0; index < d.data.length - 1; index++) {
+          cases += parseInt(d.data[index][date]);
+        }
+
+        this.single.push(this.setChartData(cases, "Total Deaths"));
+
+        this.spinner.show();
+        setTimeout(() => {
+          this.recoveredCases = cases;
+          this.spinner.hide();
+          this.expression = true;
+        }, 3000);
+      });
+    }
+  }
+
+  // *************************************************************************************************************//
+  //                                     Function pass values to Dashboard Chart                                  *
+  // *************************************************************************************************************//
+
+  setChartData(cases: number, title: string) {
+    let obj = {
+      name: title,
+      value: cases
+    };
+    return obj;
+  }
+
+  // *************************************************************************************************************//
+  //                             Function pass values to Dashboard Chart on Date Submit                           *
+  // *************************************************************************************************************//
+  userRequiredData(confirmedCases, recoveredCases, deathsCasess) {
     return [
       {
         name: "Total Confirmed Cases",
-        value: value1
+        value: confirmedCases
       },
       {
-        name: "Total Recoverd",
-        value: value2
+        name: "Total Recovered Cases",
+        value: recoveredCases
       },
       {
         name: "Total Deaths",
-        value: value3
+        value: deathsCasess
       }
     ];
   }
 
-  // ************************************   Dashboard Chart Data  *********************************//
+  // *************************************************************************************************************//
+  //                                               Dashboard Chart Data                                            *
+  // *************************************************************************************************************//
 
-  single = [
-    {
-      name: "Total Confirmed Cases",
-      value: this.Cases("Confrm", this.currentDate.slice(0, -2))
-    },
-    {
-      name: "Total Recoverd",
-      value: this.RecoveredCases(
-        "Recovered",
-        this.dateForRecovered.slice(0, -2)
-      )
-    },
-    {
-      name: "Total Deaths",
-      value: this.Cases("Deaths", this.currentDate.slice(0, -2))
-    }
-  ];
+  single = [];
   view: any[] = [280, 400];
 
   colorScheme = {

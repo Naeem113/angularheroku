@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mt-5 py-2">
   <div class="col-md-12 px-4 py-2  ">
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <input
@@ -29,7 +29,7 @@
           <tr
             (click)="getRow(info, info2)"
             *ngFor="
-              let item of APIdata
+              let item of LoctionData
                 | filter: search
                 | orderBy: 'Country_Region'
                 | paginate: { itemsPerPage: 9, currentPage: page };
