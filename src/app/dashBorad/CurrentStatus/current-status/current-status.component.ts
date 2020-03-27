@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { Papa } from "ngx-papaparse";
 import { NgxSpinnerService } from "ngx-spinner";
+import { timer } from "rxjs";
 
 @Component({
   selector: "app-current-status",
@@ -21,7 +22,7 @@ export class CurrentStatusComponent implements OnInit {
     this.minDate = new Date();
     this.maxDate = new Date();
     this.minDate.setDate(this.minDate.getDate() - 64);
-    this.maxDate.setDate(this.maxDate.getDate() - 1);
+    this.maxDate.setDate(this.maxDate.getDate());
   }
 
   // *************************************************************************************************************//
@@ -42,9 +43,9 @@ export class CurrentStatusComponent implements OnInit {
   currentDate = new Date(
     new Date().setDate(new Date().getDate() - 1)
   ).toLocaleDateString();
-  dateForRecovered = new Date(
-    new Date().setDate(new Date().getDate() - 2)
-  ).toLocaleDateString();
+  // dateForRecovered = new Date(
+  //   new Date().setDate(new Date().getDate() - 2)
+  // ).toLocaleDateString();
 
   // *************************************************************************************************************//
   //                                                 ngOnInit                                                     *
@@ -52,8 +53,17 @@ export class CurrentStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
-    this.totalRecoverdCases("Recovered", this.dateForRecovered);
+    this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
     this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+    this.oberserableTimer();
+  }
+
+  oberserableTimer() {
+    const source = timer(1000, 2000);
+    const abc = source.subscribe(val => {
+      console.log(val, "-");
+      // this.subscribeTimer = this.timeLeft - val;
+    });
   }
 
   // *************************************************************************************************************//
@@ -75,18 +85,18 @@ export class CurrentStatusComponent implements OnInit {
       this.DataStats = true;
       this.showDate = event.value;
       let selectDate: string = event.value.slice(1, -2);
-      let selectDate2: string = event.value.slice(1);
+      // let selectDate2: string = event.value.slice(1);
 
       if (this.showDate.charAt(3) === "0") {
-        selectDate2 =
-          selectDate2.substring(0, 2) +
-          selectDate2.substring(3, selectDate2.length);
+        // selectDate2 =
+        //   selectDate2.substring(0, 2) +
+        //   selectDate2.substring(3, selectDate2.length);
         selectDate =
           selectDate.substring(0, 2) +
           selectDate.substring(3, selectDate.length);
       }
       this.totalConfirmedCases("Confirmed", selectDate);
-      this.totalRecoverdCases("Recovered", selectDate2),
+      this.totalRecoverdCases("Recovered", selectDate),
         this.totalDeathsCases("Deaths", selectDate);
       this.single = this.userRequiredData(
         this.confirmedCases,

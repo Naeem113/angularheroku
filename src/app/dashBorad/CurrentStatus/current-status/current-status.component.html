@@ -42,7 +42,10 @@
           </ngx-charts-number-card>
 
           <div class="col-xs-12 col-12 col-sm-6 col-md-12 ">
-            <div class="input-group mb-3">
+            <div
+              class="input-group mb-3 custom-content"
+              [ngClass]="{ datePicker: true }"
+            >
               <input
                 type="text"
                 ngModel
