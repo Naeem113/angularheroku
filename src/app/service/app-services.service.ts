@@ -11,7 +11,7 @@ export class AppServicesService {
   // *************************************************************************************************************//
 
   date = new Date();
-  currentDay = (this.date.getDate() - 1).toString();
+  currentDay = (this.date.getDate() - 2).toString();
   currentMounth = (this.date.getMonth() + 1).toString();
 
   // *************************************************************************************************************//

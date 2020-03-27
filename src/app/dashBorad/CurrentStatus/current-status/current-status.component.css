@@ -13,16 +13,6 @@
   font-size: 17px;
   font-weight: bold;
 }
-.confrm {
-  color: yellow;
-}
-
-.recover {
-  color: rgb(65, 228, 65);
-}
-.death {
-  color: red;
-}
 
 .ngx-charts-number-card {
   margin-left: 100px;
@@ -31,7 +21,7 @@
   background: rgba(12, 13, 14, 0.4);
 }
 .row {
-  /* height: 140vh; */
+  height: 100vh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -106,7 +96,7 @@
 @media screen and (min-width: 0px) and (max-width: 767px) {
   /*Style*/
   .row {
-    height: 110vh;
+    height: 100vh;
     margin-top: -10px;
   }
   .heading {

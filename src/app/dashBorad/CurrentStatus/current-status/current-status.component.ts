@@ -1,8 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { Papa } from "ngx-papaparse";
 import { NgxSpinnerService } from "ngx-spinner";
-import { timer } from "rxjs";
 
 @Component({
   selector: "app-current-status",
@@ -17,12 +16,13 @@ export class CurrentStatusComponent implements OnInit {
   constructor(
     private papa: Papa,
     private _serviceData: AppServicesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {
     this.minDate = new Date();
     this.maxDate = new Date();
-    this.minDate.setDate(this.minDate.getDate() - 64);
-    this.maxDate.setDate(this.maxDate.getDate());
+    this.minDate.setDate(this.minDate.getDate() - 65);
+    this.maxDate.setDate(this.maxDate.getDate() - 1);
   }
 
   // *************************************************************************************************************//
@@ -30,7 +30,6 @@ export class CurrentStatusComponent implements OnInit {
   // *************************************************************************************************************//
 
   expression: boolean = false;
-
   minDate: Date;
   maxDate: Date;
   showDate: string;
@@ -43,27 +42,22 @@ export class CurrentStatusComponent implements OnInit {
   currentDate = new Date(
     new Date().setDate(new Date().getDate() - 1)
   ).toLocaleDateString();
-  // dateForRecovered = new Date(
-  //   new Date().setDate(new Date().getDate() - 2)
-  // ).toLocaleDateString();
-
+  yesterDay = new Date(
+    new Date().setDate(new Date().getDate() - 2)
+  ).toLocaleDateString();
+  ngAfterViewChecked() {
+    //your code to update the model
+    this.cdr.detectChanges();
+  }
   // *************************************************************************************************************//
   //                                                 ngOnInit                                                     *
   // *************************************************************************************************************//
 
   ngOnInit(): void {
+    this.spinner.show();
     this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
     this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
     this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
-    this.oberserableTimer();
-  }
-
-  oberserableTimer() {
-    const source = timer(1000, 2000);
-    const abc = source.subscribe(val => {
-      console.log(val, "-");
-      // this.subscribeTimer = this.timeLeft - val;
-    });
   }
 
   // *************************************************************************************************************//
@@ -85,12 +79,7 @@ export class CurrentStatusComponent implements OnInit {
       this.DataStats = true;
       this.showDate = event.value;
       let selectDate: string = event.value.slice(1, -2);
-      // let selectDate2: string = event.value.slice(1);
-
       if (this.showDate.charAt(3) === "0") {
-        // selectDate2 =
-        //   selectDate2.substring(0, 2) +
-        //   selectDate2.substring(3, selectDate2.length);
         selectDate =
           selectDate.substring(0, 2) +
           selectDate.substring(3, selectDate.length);
@@ -113,12 +102,10 @@ export class CurrentStatusComponent implements OnInit {
   totalConfirmedCases(data: string, date: string) {
     if (localStorage.getItem(data)) {
       let Data = JSON.parse(localStorage.getItem(data));
-      let cases: number = 0;
-      for (let index = 0; index < Data.length - 1; index++) {
-        cases += parseInt(Data[index][date]);
-      }
-      this.confirmedCases = cases;
-      this.single.push(this.setChartData(cases, "Total Confirmed Cases"));
+      this.confirmedCases = this.SumResult(Data, date);
+      this.single.push(
+        this.setChartData(this.confirmedCases, "Total Confirmed Cases")
+      );
     } else {
       this._serviceData.getConfirmedData().subscribe(res => {
         let d = this.papa.parse(res, {
@@ -128,17 +115,10 @@ export class CurrentStatusComponent implements OnInit {
             return result;
           }
         });
-
-        let cases: number = 0;
-        for (let index = 0; index < d.data.length - 1; index++) {
-          cases += parseInt(d.data[index][date]);
-        }
-
-        setTimeout(() => {
-          this.confirmedCases = cases;
-        }, 2000);
-
-        this.single.push(this.setChartData(cases, "Total Confirmed Cases"));
+        this.confirmedCases = this.SumResult(d.data, date);
+        this.single.push(
+          this.setChartData(this.confirmedCases, "Total Confirmed Cases")
+        );
       });
     }
   }
@@ -150,12 +130,10 @@ export class CurrentStatusComponent implements OnInit {
   totalRecoverdCases(keyName: string, date: string) {
     if (localStorage.getItem(keyName)) {
       let Data = JSON.parse(localStorage.getItem(keyName));
-      let cases: number = 0;
-      for (let index = 0; index < Data.length - 1; index++) {
-        cases += parseInt(Data[index][date]);
-      }
-      this.recoveredCases = cases;
-      this.single.push(this.setChartData(cases, "Total Recovered Cases"));
+      this.recoveredCases = this.SumResult(Data, date);
+      this.single.push(
+        this.setChartData(this.recoveredCases, "Total Recovered Cases")
+      );
     } else {
       this._serviceData.getRecoveredData().subscribe(res => {
         let d = this.papa.parse(res, {
@@ -165,15 +143,10 @@ export class CurrentStatusComponent implements OnInit {
             return result;
           }
         });
-
-        let cases: number = 0;
-        for (let index = 0; index < d.data.length - 1; index++) {
-          cases += parseInt(d.data[index][date]);
-        }
-        setTimeout(() => {
-          this.deathsCases = cases;
-        }, 2000);
-        this.single.push(this.setChartData(cases, "Total Recovered Cases"));
+        this.recoveredCases = this.SumResult(d.data, date);
+        this.single.push(
+          this.setChartData(this.recoveredCases, "Total Recovered Cases")
+        );
       });
     }
   }
@@ -185,13 +158,10 @@ export class CurrentStatusComponent implements OnInit {
   totalDeathsCases(data: string, date: string) {
     if (localStorage.getItem(data)) {
       let Data = JSON.parse(localStorage.getItem(data));
-      let cases: number = 0;
-      for (let index = 0; index < Data.length - 1; index++) {
-        cases += parseInt(Data[index][date]);
-      }
-      this.deathsCases = cases;
-      this.single.push(this.setChartData(cases, "Total Deaths"));
+      this.deathsCases = this.SumResult(Data, date);
+      this.single.push(this.setChartData(this.deathsCases, "Total Deaths"));
       this.expression = true;
+      this.spinner.hide();
     } else {
       this._serviceData.getDeathsData().subscribe(res => {
         let d = this.papa.parse(res, {
@@ -201,22 +171,30 @@ export class CurrentStatusComponent implements OnInit {
             return result;
           }
         });
-
-        let cases: number = 0;
-        for (let index = 0; index < d.data.length - 1; index++) {
-          cases += parseInt(d.data[index][date]);
-        }
-
-        this.single.push(this.setChartData(cases, "Total Deaths"));
-
-        this.spinner.show();
+        this.deathsCases = this.SumResult(d.data, date);
+        this.single.push(this.setChartData(this.deathsCases, "Total Deaths"));
         setTimeout(() => {
-          this.recoveredCases = cases;
           this.spinner.hide();
           this.expression = true;
-        }, 3000);
+        }, 2000);
       });
     }
+  }
+
+  // *************************************************************************************************************//
+  //                            Sum the Reqiured Result AND pass to Subscribe Function                            *
+  // *************************************************************************************************************//
+
+  SumResult(data, date) {
+    let cases: number = 0;
+    for (let index = 0; index < data.length - 1; index++) {
+      if (data[index][date]) {
+        cases += parseInt(data[index][date]);
+      } else {
+        cases += parseInt(data[index][this.yesterDay.slice(0, -2)]);
+      }
+    }
+    return cases;
   }
 
   // *************************************************************************************************************//
@@ -256,7 +234,7 @@ export class CurrentStatusComponent implements OnInit {
   // *************************************************************************************************************//
 
   single = [];
-  view: any[] = [280, 400];
+  view: any[] = [310, 400];
 
   colorScheme = {
     domain: ["#C7B42C", "#5AA454", "#A10A28"]
