@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { Papa } from "ngx-papaparse";
 import { NgxSpinnerService } from "ngx-spinner";
+import Chart from "chart.js";
 
 @Component({
   selector: "app-current-status",
@@ -283,9 +284,60 @@ export class CurrentStatusComponent implements OnInit {
   colorScheme = {
     domain: ["#C7B42C", "#5AA454", "#A10A28"]
   };
-  cardColor: string = "E3EFFF";
+  cardColor: string = "F8F9FA";
 
   onSelect(event) {
     console.log(event);
   }
+
+  gradient: boolean = false;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
+  legendPosition: string = "below";
+
+  view2: any[] = [700, 200];
+  view3: any[] = [700, 400];
+
+  // options
+  showXAxis: boolean = true;
+  showYAxis: boolean = true;
+
+  showXAxisLabel: boolean = true;
+  yAxisLabel: string = "Country";
+  showYAxisLabel: boolean = true;
+  xAxisLabel: string = "Population";
+
+  onSelects(data): void {
+    console.log("Item clicked", JSON.parse(JSON.stringify(data)));
+  }
+
+  onActivate(data): void {
+    console.log("Activate", JSON.parse(JSON.stringify(data)));
+  }
+
+  onDeactivate(data): void {
+    console.log("Deactivate", JSON.parse(JSON.stringify(data)));
+  }
+
+  chart = new Chart("myChart", {
+    // The type of chart we want to create
+    type: "line",
+
+    // The data for our dataset
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          label: "My First dataset",
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgb(255, 99, 132)",
+          data: [0, 10, 5, 2, 20, 30, 45]
+        }
+      ]
+    },
+
+    // Configuration options go here
+    options: {}
+  });
 }
