@@ -55,9 +55,19 @@ export class CurrentStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-    this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
-    this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
-    this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+    console.log(this.currentDate);
+    this.updateLocalStorage();
+    if (localStorage.getItem("Deaths") === null) {
+      setTimeout(() => {
+        this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
+        this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
+        this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+      }, 3000);
+    } else {
+      this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
+      this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
+      this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+    }
   }
 
   // *************************************************************************************************************//
@@ -93,6 +103,40 @@ export class CurrentStatusComponent implements OnInit {
         this.deathsCases
       );
     }
+  }
+
+  // *************************************************************************************************************//
+  //                                      Functions Update LocalStorage                                           *
+  // *************************************************************************************************************//
+
+  updateLocalStorage() {
+    this._serviceData.getConfirmedData().subscribe(res => {
+      let d = this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Confirmed", JSON.stringify(result.data));
+          return result;
+        }
+      });
+    });
+    this._serviceData.getRecoveredData().subscribe(res => {
+      let d = this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Recovered", JSON.stringify(result.data));
+          return result;
+        }
+      });
+    });
+    this._serviceData.getDeathsData().subscribe(res => {
+      let d = this.papa.parse(res, {
+        header: true,
+        complete: result => {
+          localStorage.setItem("Deaths", JSON.stringify(result.data));
+          return result;
+        }
+      });
+    });
   }
 
   // *************************************************************************************************************//
