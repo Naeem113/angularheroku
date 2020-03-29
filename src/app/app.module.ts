@@ -16,13 +16,16 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgOrderByPipeModule } from "angular-pipes";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgxSpinnerModule } from "ngx-spinner";
+import { ChartsModule } from "ng2-charts";
+import { BarChartComponent } from './Charts/bar-chart/bar-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     CurrentStatusComponent,
-    LatestDataComponent
+    LatestDataComponent,
+    BarChartComponent
   ],
   imports: [
     HttpClientModule,
@@ -34,6 +37,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     Ng2SearchPipeModule,
     NgxPaginationModule,
     NgxChartsModule,
+    ChartsModule,
     NgOrderByPipeModule,
     BsDatepickerModule.forRoot(),
     NgxSpinnerModule

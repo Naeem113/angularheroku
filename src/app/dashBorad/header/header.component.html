@@ -1,6 +1,8 @@
 <div class="row">
   <div class="col-md-12">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  shadow fixed-top ">
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-light py-3 shadow fixed-top "
+    >
       <a class="navbar-brand " href="#">Corona Virus (COVID-19)</a>
       <button
         *ngIf="OpenButton"
@@ -48,10 +50,10 @@
           <li class="nav-item ">
             <a
               class="nav-link"
-              routerLink="table"
+              routerLink="countries"
               routerLinkActive="active"
               (click)="toggleClose()"
-              >Table</a
+              >Countries</a
             >
           </li>
           <!-- <li class="nav-item ">

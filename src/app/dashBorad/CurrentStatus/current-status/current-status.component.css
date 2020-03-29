@@ -1,12 +1,12 @@
 .heading {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  font-size: 38px;
+  font-size: 34px;
+  padding: 14px;
 }
 .card-title {
   font-size: 27px;
   font-weight: bolder;
-  color: #ffffff;
-  text-shadow: 10px 10px 10px black;
+  color: #000000;
 }
 .card-text-text {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -14,24 +14,28 @@
   font-weight: bold;
 }
 
-.ngx-charts-number-card {
-  margin-left: 100px;
+.chart {
+  margin-left: 300px;
 }
-.card {
-  background: rgba(12, 13, 14, 0.4);
-}
-.row {
-  height: 100vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* background-image: url("../../../../assets/outbreak-coronavirus-world.png"); */
-  /* background-image: url("https://media.nbcnewyork.com/2019/09/coronavirus-map-animated-thumb.gCif?crop&resize=850%2C478"); */
+/* .card {
+  background: rgba(255, 255, 255, 0.8);
+} */
+/* .row { */
+/* height: 100vh; */
+/* background-position: center; */
+/* background-repeat: no-repeat; */
+/* background-size: cover; */
+/* background-image: url("../../../../assets/outbreak-coronavirus-world.png"); */
+/* background-image: url("https://media.nbcnewyork.com/2019/09/coronavirus-map-animated-thumb.gCif?crop&resize=850%2C478"); */
 
-  background-image: url("https://www.who.int/images/default-source/big-stories/influenza-spotlight/flu-mapefd19d804815422a840a7899773951f0.gif?sfvrsn=4699e731_4");
-}
+/* background-image: url("https://www.who.int/images/default-source/big-stories/influenza-spotlight/flu-mapefd19d804815422a840a7899773951f0.gif?sfvrsn=4699e731_4"); */
+/* } */
 .card-text {
   font-size: 20px;
+}
+
+.pieChart {
+  width: 400px;
 }
 
 /* Smartphones (portrait and landscape) ----------- */

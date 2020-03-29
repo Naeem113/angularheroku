@@ -9,7 +9,7 @@ const routes: Routes = [
     component: CurrentStatusComponent
   },
   {
-    path: "table",
+    path: "countries",
     component: LatestDataComponent
   }
 ];
