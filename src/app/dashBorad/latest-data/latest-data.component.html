@@ -2,58 +2,93 @@
   <ngx-spinner [fullScreen]="false" type="line-scale-party" size="medium">
     <p class="loading" style="font-size: 20px; color: white">Loading...</p>
   </ngx-spinner>
-</div>
-<div *ngIf="loading" class="row mt-5 py-4">
-  <div class="col-md-12 px-4 py-2  ">
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-      <input
-        class="form-control mr-sm-2 input"
-        type="search"
-        placeholder="Search by Country..."
-        aria-label="Search"
-        [(ngModel)]="search"
-        name="Search"
-      />
-    </nav>
-    <div class="table-responsive">
-      <table class="table table-hover border ">
-        <thead class="bg-dark text-light ">
-          <tr>
-            <!-- <th scope="col">#</th> -->
-            <th scope="col">Country/Region</th>
-            <th scope="col">Province/State</th>
-            <th scope="col">Confirmed</th>
-            <th scope="col">Deaths</th>
-            <th scope="col">Recovered</th>
-            <!-- <th scope="col">Latitude</th> -->
-            <!-- <th scope="col">Longitude</th> -->
-            <!-- <th scope="col">Last Update</th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            (click)="getRow(info)"
-            *ngFor="
-              let item of AllCountry
-                | filter: search
-                | orderBy: '-Confirmed'
-                | paginate: { itemsPerPage: 20, currentPage: page };
-              index as i
-            "
-          >
-            <!-- <th scope="row">{{ i + 1 }}</th> -->
-            <td #info>{{ item.Country_Region }}</td>
-            <td>{{ item.Province_State }}</td>
-            <td>{{ item.Confirmed }}</td>
-            <td>{{ item.Deaths }}</td>
-            <td>{{ item.Recovered }}</td>
-            <!-- <td>{{ item.Latitude }}</td> -->
-            <!-- <td>{{ item.Longitude }}</td> -->
-            <!-- <td>{{ item.Last Update }}</td> -->
-          </tr>
-        </tbody>
-      </table>
+  <div *ngIf="loading" class="row d-flex justify-content-center mt-5 py-4">
+    <div class="col-md-10 px-4 py-2  ">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <input
+          class="form-control mr-sm-0 input"
+          type="search"
+          placeholder="Search by Country..."
+          aria-label="Search"
+          [(ngModel)]="search"
+          name="Search"
+        />
+      </nav>
+      <div class="table-responsive">
+        <table class="table table-hover border bg-white">
+          <thead class="bg-light ">
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Countries</th>
+              <th scope="col">Confirmed</th>
+              <th scope="col">Deaths</th>
+              <th scope="col">Recovered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              (click)="getRow(info)"
+              *ngFor="
+                let item of AllCountry
+                  | filter: search
+                  | orderBy: '-Confirmed'
+                  | paginate: { itemsPerPage: 15, currentPage: page };
+                index as i
+              "
+            >
+              <td style="width: 4.66%" class="">
+                <img
+                  style="width: 30px;"
+                  src="../../../assets/flags icon/{{ item.Country_Region }}.png"
+                  alt="..."
+                  class="img border"
+                />
+              </td>
+              <td style="width: 44.66%" #info>{{ item.Country_Region }}</td>
+              <td>{{ item.Confirmed }}</td>
+              <td>{{ item.Deaths }}</td>
+              <td>{{ item.Recovered }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination-controls (pageChange)="page = $event"></pagination-controls>
     </div>
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  </div>
+</div>
+<!-- Button to Open the Modal -->
+<button
+  type="button"
+  class="btn btn-primary"
+  data-toggle="modal"
+  data-target="#myModal"
+>
+  Open modal
+</button>
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog " style="height: 8000px;">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Modal body..
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 </div>

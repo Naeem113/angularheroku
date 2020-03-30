@@ -46,7 +46,6 @@ export class CurrentStatusComponent implements OnInit {
     new Date().setDate(new Date().getDate() - 2)
   ).toLocaleDateString();
   ngAfterViewChecked() {
-    //your code to update the model
     this.cdr.detectChanges();
   }
   // *************************************************************************************************************//
@@ -55,21 +54,46 @@ export class CurrentStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-    console.log(this.currentDate);
     this.updateLocalStorage();
-    if (localStorage.getItem("Deaths") === null) {
+    if (localStorage.getItem("Deaths")) {
+      this.updateLocalStorage();
+      this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
+      this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
+      this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+      this.barChartData.push({
+        data: [this.confirmedCases],
+        label: "Confirmed"
+      });
+      this.barChartData.push({
+        data: [this.recoveredCases],
+        label: "Recovered"
+      });
+      this.barChartData.push({ data: [this.deathsCases], label: "Deaths" });
+      this.expression = true;
+      this.spinner.hide();
+    } else {
       setTimeout(() => {
         this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
         this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
         this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
+        this.barChartData.push({
+          data: [this.confirmedCases],
+          label: "Confirmed"
+        });
+        this.barChartData.push({
+          data: [this.recoveredCases],
+          label: "Recovered"
+        });
+        this.barChartData.push({ data: [this.deathsCases], label: "Deaths" });
+        this.expression = true;
+        this.spinner.hide();
       }, 3000);
-    } else {
-      this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
-      this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
-      this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));
     }
   }
 
+  onchange(e) {
+    console.log(e);
+  }
   // *************************************************************************************************************//
   //                                         When User Click on Refresh                                           *
   // *************************************************************************************************************//
@@ -102,6 +126,11 @@ export class CurrentStatusComponent implements OnInit {
         this.recoveredCases,
         this.deathsCases
       );
+      this.barChartData = this.userRequiredBarchartData(
+        this.confirmedCases,
+        this.recoveredCases,
+        this.deathsCases
+      );
     }
   }
 
@@ -111,7 +140,7 @@ export class CurrentStatusComponent implements OnInit {
 
   updateLocalStorage() {
     this._serviceData.getConfirmedData().subscribe(res => {
-      let d = this.papa.parse(res, {
+      this.papa.parse(res, {
         header: true,
         complete: result => {
           localStorage.setItem("Confirmed", JSON.stringify(result.data));
@@ -120,7 +149,7 @@ export class CurrentStatusComponent implements OnInit {
       });
     });
     this._serviceData.getRecoveredData().subscribe(res => {
-      let d = this.papa.parse(res, {
+      this.papa.parse(res, {
         header: true,
         complete: result => {
           localStorage.setItem("Recovered", JSON.stringify(result.data));
@@ -129,7 +158,7 @@ export class CurrentStatusComponent implements OnInit {
       });
     });
     this._serviceData.getDeathsData().subscribe(res => {
-      let d = this.papa.parse(res, {
+      this.papa.parse(res, {
         header: true,
         complete: result => {
           localStorage.setItem("Deaths", JSON.stringify(result.data));
@@ -144,27 +173,11 @@ export class CurrentStatusComponent implements OnInit {
   // *************************************************************************************************************//
 
   totalConfirmedCases(data: string, date: string) {
-    if (localStorage.getItem(data)) {
-      let Data = JSON.parse(localStorage.getItem(data));
-      this.confirmedCases = this.SumResult(Data, date);
-      this.single.push(
-        this.setChartData(this.confirmedCases, "Total Confirmed Cases")
-      );
-    } else {
-      this._serviceData.getConfirmedData().subscribe(res => {
-        let d = this.papa.parse(res, {
-          header: true,
-          complete: result => {
-            localStorage.setItem(data, JSON.stringify(result.data));
-            return result;
-          }
-        });
-        this.confirmedCases = this.SumResult(d.data, date);
-        this.single.push(
-          this.setChartData(this.confirmedCases, "Total Confirmed Cases")
-        );
-      });
-    }
+    let Data = JSON.parse(localStorage.getItem(data));
+    this.confirmedCases = this.SumResult(Data, date);
+    this.single.push(
+      this.setChartData(this.confirmedCases, "Total Confirmed Cases")
+    );
   }
 
   // *************************************************************************************************************//
@@ -172,27 +185,11 @@ export class CurrentStatusComponent implements OnInit {
   // *************************************************************************************************************//
 
   totalRecoverdCases(keyName: string, date: string) {
-    if (localStorage.getItem(keyName)) {
-      let Data = JSON.parse(localStorage.getItem(keyName));
-      this.recoveredCases = this.SumResult(Data, date);
-      this.single.push(
-        this.setChartData(this.recoveredCases, "Total Recovered Cases")
-      );
-    } else {
-      this._serviceData.getRecoveredData().subscribe(res => {
-        let d = this.papa.parse(res, {
-          header: true,
-          complete: result => {
-            localStorage.setItem(keyName, JSON.stringify(result.data));
-            return result;
-          }
-        });
-        this.recoveredCases = this.SumResult(d.data, date);
-        this.single.push(
-          this.setChartData(this.recoveredCases, "Total Recovered Cases")
-        );
-      });
-    }
+    let Data = JSON.parse(localStorage.getItem(keyName));
+    this.recoveredCases = this.SumResult(Data, date);
+    this.single.push(
+      this.setChartData(this.recoveredCases, "Total Recovered Cases")
+    );
   }
 
   // *************************************************************************************************************//
@@ -200,29 +197,9 @@ export class CurrentStatusComponent implements OnInit {
   // *************************************************************************************************************//
 
   totalDeathsCases(data: string, date: string) {
-    if (localStorage.getItem(data)) {
-      let Data = JSON.parse(localStorage.getItem(data));
-      this.deathsCases = this.SumResult(Data, date);
-      this.single.push(this.setChartData(this.deathsCases, "Total Deaths"));
-      this.expression = true;
-      this.spinner.hide();
-    } else {
-      this._serviceData.getDeathsData().subscribe(res => {
-        let d = this.papa.parse(res, {
-          header: true,
-          complete: result => {
-            localStorage.setItem(data, JSON.stringify(result.data));
-            return result;
-          }
-        });
-        this.deathsCases = this.SumResult(d.data, date);
-        this.single.push(this.setChartData(this.deathsCases, "Total Deaths"));
-        setTimeout(() => {
-          this.spinner.hide();
-          this.expression = true;
-        }, 2000);
-      });
-    }
+    let Data = JSON.parse(localStorage.getItem(data));
+    this.deathsCases = this.SumResult(Data, date);
+    this.single.push(this.setChartData(this.deathsCases, "Total Deaths"));
   }
 
   // *************************************************************************************************************//
@@ -274,7 +251,23 @@ export class CurrentStatusComponent implements OnInit {
   }
 
   // *************************************************************************************************************//
-  //                                               Dashboard Chart Data                                            *
+  //                             Function pass values to Bar Chart on Date Submit                           *
+  // *************************************************************************************************************//
+
+  userRequiredBarchartData(
+    confirmedCases: any,
+    recoveredCases: any,
+    deathsCasess: any
+  ) {
+    return [
+      { data: [confirmedCases], label: "Confirmed" },
+      { data: [recoveredCases], label: "Recovered" },
+      { data: [deathsCasess], label: "Deaths" }
+    ];
+  }
+
+  // *************************************************************************************************************//
+  //                                                  Dashboard Chart                                             *
   // *************************************************************************************************************//
 
   single = [];
@@ -287,5 +280,55 @@ export class CurrentStatusComponent implements OnInit {
 
   onSelect(event) {
     console.log(event);
+  }
+
+  // *************************************************************************************************************//
+  //                                                Dashboard Bar Chart                                            *
+  // *************************************************************************************************************//
+
+  public barChartOptions: any = {
+    scaleShowVerticalLines: false,
+    responsive: true
+  };
+
+  public mbarChartLabels: string[] = ["Global Cases Chart"];
+  public barChartType: string = "bar";
+  public barChartLegend: boolean = true;
+
+  public barChartColors: Array<any> = [
+    {
+      backgroundColor: "#C7B42C",
+      borderColor: "#C7B42C",
+      pointBackgroundColor: "#C7B42C",
+      pointBorderColor: "#fbfafa",
+      pointHoverBackgroundColor: "#fafafa",
+      pointHoverBorderColor: "rgba(105,159,17)"
+    },
+    {
+      backgroundColor: "#5AA454",
+      borderColor: "rgba(7,20,96,1)",
+      pointBackgroundColor: "rgba(7,20,96,1)",
+      pointBorderColor: "#fff",
+      pointHoverBackgroundColor: "#fff",
+      pointHoverBorderColor: "rgba(7,0,9,1)"
+    },
+    {
+      backgroundColor: "#A10A28",
+      borderColor: "rgba(7,20,96,1)",
+      pointBackgroundColor: "rgba(7,20,96,1)",
+      pointBorderColor: "#fff",
+      pointHoverBackgroundColor: "#fff",
+      pointHoverBorderColor: "rgba(7,0,9,1)"
+    }
+  ];
+  public barChartData = [];
+
+  // events
+  public chartClicked(e: any): void {
+    console.log(e);
+  }
+
+  public chartHovered(e: any): void {
+    console.log(e);
   }
 }

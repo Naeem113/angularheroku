@@ -103,8 +103,13 @@
     height: 100vh;
     margin-top: -10px;
   }
+  .Barchart {
+    margin-left: 0px;
+    margin-top: -40px;
+  }
   .heading {
+    margin-top: 4px;
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    font-size: 30px;
+    font-size: 20px;
   }
 }
