@@ -1,11 +1,3 @@
-<ngx-spinner
-  [fullScreen]="false"
-  type="ball-clip-rotate-multiple"
-  size="medium"
->
-  <p class="loading" style="font-size: 20px; color: white">Loading...</p>
-</ngx-spinner>
-
 <div class="container">
   <div class="row map">
     <div class="col-md-12">
@@ -13,6 +5,13 @@
       <div id="chartdiv" class="chart"></div>
     </div>
   </div>
+  <ngx-spinner
+    [fullScreen]="false"
+    type="ball-clip-rotate-multiple"
+    size="medium"
+  >
+    <p class="loading" style="font-size: 20px; color: white">Loading...</p>
+  </ngx-spinner>
 
   <div *ngIf="loading" class="row d-flex justify-content-center mt-3 tableDiv">
     <div class="col-md-12 px-4 py-2  ">
