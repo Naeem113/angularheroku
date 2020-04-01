@@ -17,7 +17,7 @@ import { NgOrderByPipeModule } from "angular-pipes";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ChartsModule } from "ng2-charts";
-import { BarChartComponent } from './Charts/bar-chart/bar-chart.component';
+import { GuidelinesComponent } from './guidelines/guidelines.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { BarChartComponent } from './Charts/bar-chart/bar-chart.component';
     HeaderComponent,
     CurrentStatusComponent,
     LatestDataComponent,
-    BarChartComponent
+    GuidelinesComponent
   ],
   imports: [
     HttpClientModule,

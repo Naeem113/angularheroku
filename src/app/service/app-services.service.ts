@@ -11,18 +11,21 @@ export class AppServicesService {
   // *************************************************************************************************************//
 
   date = new Date();
-  currentDay = (this.date.getDate() - 1).toString();
-  currentMounth = (this.date.getMonth() + 1).toString();
+  currentDay = (this.date.getDate() - 2).toString();
+  currentMounth = this.date.getMonth().toString();
   // *************************************************************************************************************//
   //                                             Set URLs to Variabes                                             *
   // *************************************************************************************************************//
 
   AllLocation_URL: string =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/0" +
-    this.currentMounth +
-    "-" +
-    this.currentDay +
-    "-2020.csv";
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-31-2020.csv";
+
+  // AllLocation_URL: string =
+  // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/0" +
+  // this.currentMounth +
+  // "-" +
+  // this.currentDay +
+  // "-2020.csv";
   ConfirmedCases_URL: string =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 

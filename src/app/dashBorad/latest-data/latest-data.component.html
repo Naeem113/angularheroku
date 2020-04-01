@@ -1,9 +1,21 @@
+<ngx-spinner
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p class="loading" style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
 <div class="container">
-  <ngx-spinner [fullScreen]="false" type="line-scale-party" size="medium">
-    <p class="loading" style="font-size: 20px; color: white">Loading...</p>
-  </ngx-spinner>
-  <div *ngIf="loading" class="row d-flex justify-content-center mt-5 py-4">
-    <div class="col-md-10 px-4 py-2  ">
+  <div class="row map">
+    <div class="col-md-12">
+      <h1 class="mapheading">Coronavirus (COVID-19) map</h1>
+      <div id="chartdiv" class="chart"></div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="row d-flex justify-content-center mt-3 tableDiv">
+    <div class="col-md-12 px-4 py-2  ">
       <nav class="navbar navbar-expand-lg navbar-light">
         <input
           class="form-control mr-sm-0 input"
@@ -36,15 +48,15 @@
                 index as i
               "
             >
-              <td style="width: 4.66%" class="">
+              <td style="width: 4%" class="">
                 <img
-                  style="width: 30px;"
+                  style="width: 24px;"
                   src="../../../assets/flags icon/{{ item.Country_Region }}.png"
                   alt="..."
                   class="img border"
                 />
               </td>
-              <td style="width: 44.66%" #info>{{ item.Country_Region }}</td>
+              <td style="width: 54.66%" #info>{{ item.Country_Region }}</td>
               <td>{{ item.Confirmed }}</td>
               <td>{{ item.Deaths }}</td>
               <td>{{ item.Recovered }}</td>

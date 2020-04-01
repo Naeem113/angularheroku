@@ -1,0 +1,26 @@
+.heading {
+  font-family: "Arial Narrow Bold", sans-serif;
+  font-size: 34px;
+}
+
+ul,
+p {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 18px;
+  list-style-type: decimal;
+}
+
+.subHeading {
+  color: #ee6723;
+  font-weight: bolder;
+}
+.image {
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 767px) {
+  .heading {
+    font-size: 27px;
+  }
+}

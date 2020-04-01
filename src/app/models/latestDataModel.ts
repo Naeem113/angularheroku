@@ -8,4 +8,5 @@ export interface latestData {
   Lat: number;
   Last_Update: number;
   Long_: number;
+  code: string;
 }
