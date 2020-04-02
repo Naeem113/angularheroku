@@ -57,6 +57,7 @@ export class CurrentStatusComponent implements OnInit {
     this.updateLocalStorage();
     if (localStorage.getItem("Deaths")) {
       this.updateLocalStorage();
+
       this.totalConfirmedCases("Confirmed", this.currentDate.slice(0, -2));
       this.totalRecoverdCases("Recovered", this.currentDate.slice(0, -2));
       this.totalDeathsCases("Deaths", this.currentDate.slice(0, -2));

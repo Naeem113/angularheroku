@@ -1,17 +1,29 @@
 <div class="container">
   <div class="row map">
+    <h1 class="mapheading">Coronavirus (COVID-19) map</h1>
     <div class="col-md-12">
-      <h1 class="mapheading">Coronavirus (COVID-19) map</h1>
-      <div id="chartdiv" class="chart"></div>
+      <div id="chartdiv" class="chart">
+        <ngx-spinner
+          bdColor=""
+          [fullScreen]="false"
+          type="line-scale-party"
+          size="medium"
+          color="black"
+        >
+          <p class="loading" style=" font-size: 20px; color:black">
+            Map Loading...
+          </p>
+        </ngx-spinner>
+      </div>
     </div>
   </div>
-  <ngx-spinner
-    [fullScreen]="false"
+  <!-- <ngx-spinner
+    [fullScreen]="true"
     type="ball-clip-rotate-multiple"
     size="medium"
   >
     <p class="loading" style="font-size: 20px; color: white">Loading...</p>
-  </ngx-spinner>
+  </ngx-spinner> -->
 
   <div *ngIf="loading" class="row d-flex justify-content-center mt-3 tableDiv">
     <div class="col-md-12 px-4 py-2  ">

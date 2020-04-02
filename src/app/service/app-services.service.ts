@@ -11,7 +11,7 @@ export class AppServicesService {
   // *************************************************************************************************************//
 
   date = new Date();
-  currentDay = (this.date.getDate() - 2).toString();
+  currentDay = this.date.getDate() - 1;
   currentMounth = this.date.getMonth().toString();
   // *************************************************************************************************************//
   //                                             Set URLs to Variabes                                             *
@@ -39,7 +39,9 @@ export class AppServicesService {
   //                                                Constructor                                                   *
   // *************************************************************************************************************//
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log(this.date.toLocaleDateString());
+  }
 
   // *************************************************************************************************************//
   //                                      Functions that Get Data from API                                        *
