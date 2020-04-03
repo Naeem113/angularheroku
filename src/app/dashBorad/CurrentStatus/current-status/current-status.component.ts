@@ -48,6 +48,8 @@ export class CurrentStatusComponent implements OnInit {
   ngAfterViewChecked() {
     this.cdr.detectChanges();
   }
+  date = new Date();
+  lastupdate = this.date.toDateString();
   // *************************************************************************************************************//
   //                                                 ngOnInit                                                     *
   // *************************************************************************************************************//
