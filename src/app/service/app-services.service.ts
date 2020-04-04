@@ -2,6 +2,10 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
+interface IP {
+  ip: number;
+}
+
 @Injectable({
   providedIn: "root"
 })
@@ -13,8 +17,7 @@ export class AppServicesService {
   date = new Date();
   currentDay = this.date.getDate() - 1;
   currentMounth = this.date.getMonth().toString();
-  lng: number;
-  lat: number;
+  IP: string;
   // *************************************************************************************************************//
   //                                             Set URLs to Variabes                                             *
   // *************************************************************************************************************//
@@ -37,28 +40,33 @@ export class AppServicesService {
   RecoveredCases_URL: string =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
-  countryName: string = "http://ip-api.com/json";
-
   // *************************************************************************************************************//
   //                                                Constructor                                                   *
   // *************************************************************************************************************//
 
   constructor(private http: HttpClient) {
-    if (navigator) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        this.lng = +pos.coords.longitude;
-        this.lat = +pos.coords.latitude;
-      });
-    }
+    this.getIPAddress().subscribe(res => {
+      this.IP = res.ip;
+      console.log(res.ip);
+    });
+
+    // setTimeout(() => {
+    // console.log(this.IP);
+    //   this.getcountry().subscribe(res => {
+    //     console.log(res);
+    //   });
+    // }, 3000);
   }
 
   // *************************************************************************************************************//
   //                                      Functions that Get Data from API                                        *
   // *************************************************************************************************************//
-
-  getcountry(): Observable<any> {
-    return this.http.get(this.countryName, { responseType: "json" });
+  getIPAddress(): Observable<any> {
+    return this.http.get("https://api6.ipify.org?format=json", {
+      responseType: "json"
+    });
   }
+
   getConfirmedData(): Observable<any> {
     return this.http.get(this.ConfirmedCases_URL, { responseType: "text" });
   }

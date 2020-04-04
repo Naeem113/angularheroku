@@ -3,6 +3,8 @@ import { Papa } from "ngx-papaparse";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { latestData } from "../../models/latestDataModel";
 import { Country } from "../../models/CountryModel";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 import { NgxSpinnerService } from "ngx-spinner";
 
@@ -49,6 +51,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   countryCode: string;
   CurrentCountry: latestData;
   mapLoad: boolean;
+  Ip: string;
 
   // *************************************************************************************************************//
   //                                                Constructor                                                   *
@@ -58,7 +61,8 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     private papa: Papa,
     private _dataService: AppServicesService,
     private spinner: NgxSpinnerService,
-    private zone: NgZone
+    private zone: NgZone,
+    private Http: HttpClient
   ) {}
 
   ngAfterViewInit(): void {
@@ -87,21 +91,30 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   }
 
   // *************************************************************************************************************//
-  //                                        Get Country Name From Internet Serivce                                 *
+  //                                        Get Country Name From IP Address                                      *
   // *************************************************************************************************************//
+  getCountryAPI(): Observable<any> {
+    return this.Http.get(
+      "https://ipapi.co/" + this._dataService.IP + "/json/ ",
+      {
+        responseType: "json"
+      }
+    );
+  }
 
   getCountry() {
     if (localStorage.getItem("country")) {
-      let result: Country = JSON.parse(localStorage.getItem("country"));
-      this.countryName = result.country;
-      this.countryCode = result.countryCode;
-    } else {
-      this._dataService.getcountry().subscribe(res => {
-        this.countryName = res.country;
-        this.countryCode = res.countryCode;
+      this.getCountryAPI().subscribe(res => {
         localStorage.setItem("country", JSON.stringify(res));
-
-        // let result = JSON.parse(localStorage.getItem("country"));
+      });
+      let result: Country = JSON.parse(localStorage.getItem("country"));
+      this.countryName = result.country_name;
+      this.countryCode = result.country_code;
+    } else {
+      this.getCountryAPI().subscribe(res => {
+        this.countryName = res.country_name;
+        this.countryCode = res.country_code;
+        localStorage.setItem("country", JSON.stringify(res));
       });
     }
   }
