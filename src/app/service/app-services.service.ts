@@ -13,12 +13,14 @@ export class AppServicesService {
   date = new Date();
   currentDay = this.date.getDate() - 1;
   currentMounth = this.date.getMonth().toString();
+  lng: number;
+  lat: number;
   // *************************************************************************************************************//
   //                                             Set URLs to Variabes                                             *
   // *************************************************************************************************************//
 
   AllLocation_URL: string =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-02-2020.csv";
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-03-2020.csv";
 
   // AllLocation_URL: string =
   // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/0" +
@@ -35,18 +37,35 @@ export class AppServicesService {
   RecoveredCases_URL: string =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
+  countryName: string =
+    "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDsL8DGAm4ktBquUwBBm2QTAvHiL8VUkxw&latlng=34.9526205,72.331113&sensor=true";
+
   // *************************************************************************************************************//
   //                                                Constructor                                                   *
   // *************************************************************************************************************//
 
   constructor(private http: HttpClient) {
-    console.log(this.date.toLocaleDateString());
+    if (navigator) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.lng = +pos.coords.longitude;
+        this.lat = +pos.coords.latitude;
+      });
+      // setTimeout(() => {
+      //   console.log(this.lng, this.lat);
+      //   this.getcountry().subscribe(r => {
+      //     console.log(r);
+      //   });
+      // }, 4000);
+    }
   }
 
   // *************************************************************************************************************//
   //                                      Functions that Get Data from API                                        *
   // *************************************************************************************************************//
 
+  getcountry() {
+    return this.http.get(this.countryName, { responseType: "text" });
+  }
   getConfirmedData(): Observable<any> {
     return this.http.get(this.ConfirmedCases_URL, { responseType: "text" });
   }

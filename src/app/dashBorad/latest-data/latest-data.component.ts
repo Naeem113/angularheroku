@@ -57,17 +57,11 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    if (localStorage.getItem("LocationData")) {
+    setTimeout(() => {
       this.spinner.show();
       this.worldMap();
       this.spinner.hide();
-    } else {
-      setTimeout(() => {
-        this.spinner.show();
-        this.worldMap();
-        this.spinner.hide();
-      }, 3000);
-    }
+    }, 3000);
   }
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
@@ -408,7 +402,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   worldMap() {
     this.zone.runOutsideAngular(() => {
       // Create map instance
-      let chart = am4core.create("chartdiv", am4maps.MapChart);
+      let chart = am4core.create("chart", am4maps.MapChart);
       chart.projection = new am4maps.projections.Miller();
 
       // Create map polygon series for world map
@@ -421,7 +415,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
 
       worldPolygon.tooltipText =
         "[bold font-size: 14px black]{name}[/]\n[black]Confirmed cases:[/] [bold font-size: 13px black]{value}[/]\n[black]Recovered Cases:[/] [bold font-size: 13px black]{Recovered}[/]\n[black]Total Deaths:[/] [bold font-size: 13px black]{Deaths}[/]";
-      worldPolygon.nonScalingStroke = true;
+      // worldPolygon.nonScalingStroke = true;
 
       worldPolygon.strokeOpacity = 0.5;
       worldPolygon.fill = am4core.color("#eee");
@@ -444,10 +438,6 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       for (var id in am4geodata_data_countries2) {
         if (am4geodata_data_countries2.hasOwnProperty(id)) {
           let country = am4geodata_data_countries2[id];
-
-          // this.AllCountry.filter(e => {
-          //   console.log(e.Country_Region == country.country);
-          // });
 
           for (let index = 0; index < this.AllCountry.length; index++) {
             const element = this.AllCountry[index];

@@ -17,7 +17,8 @@ import { NgOrderByPipeModule } from "angular-pipes";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ChartsModule } from "ng2-charts";
-import { GuidelinesComponent } from './guidelines/guidelines.component';
+import { GuidelinesComponent } from "./guidelines/guidelines.component";
+import { AgmCoreModule } from "@agm/core";
 
 @NgModule({
   declarations: [
@@ -28,6 +29,9 @@ import { GuidelinesComponent } from './guidelines/guidelines.component';
     GuidelinesComponent
   ],
   imports: [
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyDsL8DGAm4ktBquUwBBm2QTAvHiL8VUkxw"
+    }),
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,

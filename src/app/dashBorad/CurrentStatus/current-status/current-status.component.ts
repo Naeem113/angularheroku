@@ -49,7 +49,7 @@ export class CurrentStatusComponent implements OnInit {
     this.cdr.detectChanges();
   }
   date = new Date();
-  lastupdate = this.date.toDateString();
+  lastupdate = this.date.toLocaleDateString();
   // *************************************************************************************************************//
   //                                                 ngOnInit                                                     *
   // *************************************************************************************************************//
