@@ -44,21 +44,39 @@
               <th scope="col"></th>
               <th scope="col">Countries</th>
               <th scope="col">Confirmed</th>
-              <th scope="col">Deaths</th>
               <th scope="col">Recovered</th>
+              <th scope="col">Deaths</th>
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td style="width: 3%" class="">
+                <img
+                  style="width: 23px;"
+                  src="../../../assets/flags icon/{{
+                    CurrentCountry.Country_Region
+                  }}.png"
+                  alt="..."
+                  class="img border"
+                />
+              </td>
+              <td>{{ CurrentCountry.Country_Region }}</td>
+              <td>{{ CurrentCountry.Confirmed }}</td>
+              <td>{{ CurrentCountry.Recovered }}</td>
+              <td>{{ CurrentCountry.Deaths }}</td>
+            </tr>
             <tr
               (click)="getRow(info)"
               *ngFor="
-                let item of AllCountry | filter: search | orderBy: '-Confirmed';
+                let item of CountryDataList
+                  | filter: search
+                  | orderBy: '-Confirmed';
                 index as i
               "
             >
-              <td style="width: 4%" class="">
+              <td style="width: 3%" class="">
                 <img
-                  style="width: 24px;"
+                  style="width: 23px;"
                   src="../../../assets/flags icon/{{ item.Country_Region }}.png"
                   alt="..."
                   class="img border"
@@ -66,8 +84,8 @@
               </td>
               <td style="width: 54.66%" #info>{{ item.Country_Region }}</td>
               <td>{{ item.Confirmed }}</td>
-              <td>{{ item.Deaths }}</td>
               <td>{{ item.Recovered }}</td>
+              <td>{{ item.Deaths }}</td>
             </tr>
           </tbody>
         </table>

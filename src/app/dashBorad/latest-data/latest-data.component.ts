@@ -2,6 +2,8 @@ import { Component, OnInit, NgZone, OnDestroy } from "@angular/core";
 import { Papa } from "ngx-papaparse";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { latestData } from "../../models/latestDataModel";
+import { Country } from "../../models/CountryModel";
+
 import { NgxSpinnerService } from "ngx-spinner";
 
 import * as am4core from "@amcharts/amcharts4/core";
@@ -29,6 +31,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   // *************************************************************************************************************//
   chart: am4maps.MapChart;
   AllCountry: latestData[] = [];
+  CountryDataList: latestData[] = [];
   loading: boolean = false;
   US: latestData[] = [];
   Russia: latestData[] = [];
@@ -42,7 +45,9 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   Canada: latestData[] = [];
   data: latestData[] = [];
   search: string = "";
-
+  countryName: string;
+  countryCode: string;
+  CurrentCountry: latestData;
   mapLoad: boolean;
 
   // *************************************************************************************************************//
@@ -61,7 +66,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       this.spinner.show();
       this.worldMap();
       this.spinner.hide();
-    }, 3000);
+    }, 4000);
   }
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
@@ -78,6 +83,27 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.spinner.show();
     this.allLocationData();
+    this.getCountry();
+  }
+
+  // *************************************************************************************************************//
+  //                                        Get Country Name From Internet Serivce                                 *
+  // *************************************************************************************************************//
+
+  getCountry() {
+    if (localStorage.getItem("country")) {
+      let result: Country = JSON.parse(localStorage.getItem("country"));
+      this.countryName = result.country;
+      this.countryCode = result.countryCode;
+    } else {
+      this._dataService.getcountry().subscribe(res => {
+        this.countryName = res.country;
+        this.countryCode = res.countryCode;
+        localStorage.setItem("country", JSON.stringify(res));
+
+        // let result = JSON.parse(localStorage.getItem("country"));
+      });
+    }
   }
 
   // *************************************************************************************************************//
@@ -102,8 +128,30 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   allLocationData() {
     // this.spinner.show();
     if (localStorage.getItem("LocationData")) {
-      this.New_arrayData();
-      this.loading = true;
+      this._dataService.getLocationData().subscribe(res => {
+        this.papa.parse(res, {
+          header: true,
+          complete: result => {
+            localStorage.setItem("LocationData", JSON.stringify(result.data));
+            this.New_arrayData();
+            this.AllCountry.filter(e => {
+              if (
+                e.Country_Region === this.countryName ||
+                e.Country_Region === this.countryCode
+              ) {
+                this.CurrentCountry = e;
+              }
+            });
+            for (let index = 0; index < this.AllCountry.length; index++) {
+              const element = this.AllCountry[index];
+              if (element.Country_Region != this.countryName) {
+                this.CountryDataList.push(element);
+              }
+            }
+            this.loading = true;
+          }
+        });
+      });
     } else {
       this._dataService.getLocationData().subscribe(res => {
         this.papa.parse(res, {
@@ -111,10 +159,23 @@ export class LatestDataComponent implements OnInit, OnDestroy {
           complete: result => {
             localStorage.setItem("LocationData", JSON.stringify(result.data));
             this.New_arrayData();
-            this.loading = true;
-
-            // setTimeout(() => {
-            // }, 3000);
+            setTimeout(() => {
+              this.AllCountry.filter(e => {
+                if (
+                  e.Country_Region === this.countryName ||
+                  e.Country_Region === this.countryCode
+                ) {
+                  this.CurrentCountry = e;
+                }
+              });
+              for (let index = 0; index < this.AllCountry.length; index++) {
+                const element = this.AllCountry[index];
+                if (element.Country_Region != this.countryName) {
+                  this.CountryDataList.push(element);
+                }
+              }
+              this.loading = true;
+            }, 2000);
           }
         });
       });

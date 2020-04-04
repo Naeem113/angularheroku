@@ -37,8 +37,7 @@ export class AppServicesService {
   RecoveredCases_URL: string =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
-  countryName: string =
-    "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDsL8DGAm4ktBquUwBBm2QTAvHiL8VUkxw&latlng=34.9526205,72.331113&sensor=true";
+  countryName: string = "http://ip-api.com/json";
 
   // *************************************************************************************************************//
   //                                                Constructor                                                   *
@@ -50,12 +49,6 @@ export class AppServicesService {
         this.lng = +pos.coords.longitude;
         this.lat = +pos.coords.latitude;
       });
-      // setTimeout(() => {
-      //   console.log(this.lng, this.lat);
-      //   this.getcountry().subscribe(r => {
-      //     console.log(r);
-      //   });
-      // }, 4000);
     }
   }
 
@@ -63,8 +56,8 @@ export class AppServicesService {
   //                                      Functions that Get Data from API                                        *
   // *************************************************************************************************************//
 
-  getcountry() {
-    return this.http.get(this.countryName, { responseType: "text" });
+  getcountry(): Observable<any> {
+    return this.http.get(this.countryName, { responseType: "json" });
   }
   getConfirmedData(): Observable<any> {
     return this.http.get(this.ConfirmedCases_URL, { responseType: "text" });
