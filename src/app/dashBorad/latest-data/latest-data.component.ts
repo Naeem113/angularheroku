@@ -15,6 +15,7 @@ import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4geodata_data_countries2 from "@amcharts/amcharts4-geodata/data/countries2";
 import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { Router } from "@angular/router";
 
 /* Chart code */
 // Themes begin
@@ -62,7 +63,8 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     private _dataService: AppServicesService,
     private spinner: NgxSpinnerService,
     private zone: NgZone,
-    private Http: HttpClient
+    private Http: HttpClient,
+    private Router: Router
   ) {}
 
   ngAfterViewInit(): void {
@@ -128,6 +130,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       const element = this.AllCountry[index];
       if (element.Country_Region === Country.innerText) {
         console.log(element);
+        // this.Router.navigate(["country/detail"]);
       }
     }
 
