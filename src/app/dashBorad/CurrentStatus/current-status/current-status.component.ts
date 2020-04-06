@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { AppServicesService } from "src/app/service/app-services.service";
 import { Papa } from "ngx-papaparse";
 import { NgxSpinnerService } from "ngx-spinner";
+import "core-js";
+import "classlist.js";
 
 @Component({
   selector: "app-current-status",

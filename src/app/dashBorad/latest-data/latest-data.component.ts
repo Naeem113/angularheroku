@@ -53,6 +53,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   CurrentCountry: latestData;
   mapLoad: boolean;
   Ip: string;
+  currentCountryRow: boolean = false;
 
   // *************************************************************************************************************//
   //                                                Constructor                                                   *
@@ -107,6 +108,11 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   getCountry() {
     if (localStorage.getItem("country")) {
       this.getCountryAPI().subscribe(res => {
+        if (res === null) {
+          this.currentCountryRow = false;
+        } else {
+          this.currentCountryRow = true;
+        }
         localStorage.setItem("country", JSON.stringify(res));
       });
       let result: Country = JSON.parse(localStorage.getItem("country"));
@@ -114,6 +120,11 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       this.countryCode = result.country_code;
     } else {
       this.getCountryAPI().subscribe(res => {
+        if (res === null) {
+          this.currentCountryRow = false;
+        } else {
+          this.currentCountryRow = true;
+        }
         this.countryName = res.country_name;
         this.countryCode = res.country_code;
         localStorage.setItem("country", JSON.stringify(res));

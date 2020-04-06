@@ -37,7 +37,10 @@
       </div>
     </div>
     <div class="col col-md-5   d-flex justify-content-center">
-      <div class="card shadow rounded" style="width: 21rem; height:510px ;">
+      <div
+        class="card shadow rounded mt-4"
+        style="width: 21rem; height:510px ;"
+      >
         <div class="card-body">
           <!-- <h5 class="card-title" *ngIf="CurrentStats">
             Current Stats
@@ -45,25 +48,10 @@
           <h5 class="card-title" *ngIf="DataStats">
             {{ showDate }}
           </h5> -->
-          <!-- <br />
-          <p class="card-text-text">
-            Total Confirmed Cases
-          </p>
-          <p class="abc confrm">{{ confirmedCases }}</p>
-          <br />
-          <p class="card-text-text">
-            Total Recovered
-          </p>
-          <p class="abc recover">{{ recoveredCases }}</p>
-          <br />
-          <p class="card-text-text">
-            Total Deaths
-          </p>
-          <p class="abc death">{{ deathsCases }}</p>
-          <br /> -->
+
           <div class="col-xs-12 col-12 col-sm-6 col-md-12 ">
             <div
-              class="input-group mb-3 custom-content"
+              class="input-group mb-3 mt-2 custom-content"
               [ngClass]="{ datePicker: true }"
             >
               <input
@@ -100,7 +88,35 @@
               Refresh
             </button>
           </div>
-          <div class="chart" style="margin-left: 0px;margin-top: -34px;">
+          <div class="col confrm border bg-light rounded py-1">
+            <br />
+            <p class="abc ">{{ confirmedCases }}</p>
+            <p class="text">
+              Total Confirmed Cases
+            </p>
+            <hr class="confrmMarker" />
+          </div>
+          <br />
+
+          <div class="col recover bg-light border rounded  py-1">
+            <br />
+            <p class="abc ">{{ recoveredCases }}</p>
+            <p class="text">
+              Total Recovered
+            </p>
+            <hr class="recoverMarker" />
+          </div>
+          <br />
+          <div class="col death border bg-light rounded py-1">
+            <br />
+            <p class="abc ">{{ deathsCases }}</p>
+
+            <p class="text">
+              Total Deaths
+            </p>
+            <hr class="deathMarker" />
+          </div>
+          <!-- <div class="chart" style="margin-left: 0px;margin-top: -34px;">
             <ngx-charts-number-card
               class="chart"
               [view]="view"
@@ -110,7 +126,7 @@
               (select)="onSelect($event)"
             >
             </ngx-charts-number-card>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

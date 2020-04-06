@@ -47,7 +47,6 @@ export class AppServicesService {
   constructor(private http: HttpClient) {
     this.getIPAddress().subscribe(res => {
       this.IP = res.ip;
-      console.log(res.ip);
     });
 
     // setTimeout(() => {
