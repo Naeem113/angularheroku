@@ -7,7 +7,7 @@ interface IP {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class AppServicesService {
   // *************************************************************************************************************//
@@ -16,21 +16,22 @@ export class AppServicesService {
 
   date = new Date();
   currentDay = this.date.getDate() - 1;
-  currentMounth = this.date.getMonth().toString();
+  currentMounth = (this.date.getMonth() + 1).toString();
+
   IP: string;
   // *************************************************************************************************************//
   //                                             Set URLs to Variabes                                             *
   // *************************************************************************************************************//
 
-  AllLocation_URL: string =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-11-2020.csv";
-
   // AllLocation_URL: string =
-  // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/0" +
-  // this.currentMounth +
-  // "-" +
-  // this.currentDay +
-  // "-2020.csv";
+  //   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-11-2020.csv";
+
+  AllLocation_URL: string =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/0" +
+    this.currentMounth +
+    "-" +
+    this.currentDay +
+    "-2020.csv";
   ConfirmedCases_URL: string =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
@@ -45,10 +46,11 @@ export class AppServicesService {
   // *************************************************************************************************************//
 
   constructor(private http: HttpClient) {
-    this.getIPAddress().subscribe(res => {
+    this.getIPAddress().subscribe((res) => {
       this.IP = res.ip;
+      console.log(this.IP);
     });
-
+    console.log(this.currentMounth, this.currentDay);
     // setTimeout(() => {
     // console.log(this.IP);
     //   this.getcountry().subscribe(res => {
@@ -62,7 +64,7 @@ export class AppServicesService {
   // *************************************************************************************************************//
   getIPAddress(): Observable<any> {
     return this.http.get("https://api6.ipify.org?format=json", {
-      responseType: "json"
+      responseType: "json",
     });
   }
 

@@ -26,7 +26,7 @@ am4core.useTheme(am4themes_animated);
 @Component({
   selector: "app-latest-data",
   templateUrl: "./latest-data.component.html",
-  styleUrls: ["./latest-data.component.css"]
+  styleUrls: ["./latest-data.component.css"],
 })
 export class LatestDataComponent implements OnInit, OnDestroy {
   // *************************************************************************************************************//
@@ -100,14 +100,14 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     return this.Http.get(
       "https://ipapi.co/" + this._dataService.IP + "/json/ ",
       {
-        responseType: "json"
+        responseType: "json",
       }
     );
   }
 
   getCountry() {
     if (localStorage.getItem("country")) {
-      this.getCountryAPI().subscribe(res => {
+      this.getCountryAPI().subscribe((res) => {
         if (res === null) {
           this.currentCountryRow = false;
         } else {
@@ -119,7 +119,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       this.countryName = result.country_name;
       this.countryCode = result.country_code;
     } else {
-      this.getCountryAPI().subscribe(res => {
+      this.getCountryAPI().subscribe((res) => {
         if (res === null) {
           this.currentCountryRow = false;
         } else {
@@ -155,13 +155,13 @@ export class LatestDataComponent implements OnInit, OnDestroy {
   allLocationData() {
     // this.spinner.show();
     if (localStorage.getItem("LocationData")) {
-      this._dataService.getLocationData().subscribe(res => {
+      this._dataService.getLocationData().subscribe((res) => {
         this.papa.parse(res, {
           header: true,
-          complete: result => {
+          complete: (result) => {
             localStorage.setItem("LocationData", JSON.stringify(result.data));
             this.New_arrayData();
-            this.AllCountry.filter(e => {
+            this.AllCountry.filter((e) => {
               if (
                 e.Country_Region === this.countryName ||
                 e.Country_Region === this.countryCode
@@ -176,18 +176,18 @@ export class LatestDataComponent implements OnInit, OnDestroy {
               }
             }
             this.loading = true;
-          }
+          },
         });
       });
     } else {
-      this._dataService.getLocationData().subscribe(res => {
+      this._dataService.getLocationData().subscribe((res) => {
         this.papa.parse(res, {
           header: true,
-          complete: result => {
+          complete: (result) => {
             localStorage.setItem("LocationData", JSON.stringify(result.data));
             this.New_arrayData();
             setTimeout(() => {
-              this.AllCountry.filter(e => {
+              this.AllCountry.filter((e) => {
                 if (
                   e.Country_Region === this.countryName ||
                   e.Country_Region === this.countryCode
@@ -203,7 +203,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
               }
               this.loading = true;
             }, 2000);
-          }
+          },
         });
       });
     }
@@ -225,7 +225,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "33.78686685",
     Long_: "-98.20771198",
     Province_State: "Texas",
-    Recovered: ""
+    Recovered: "",
   };
   China_Obj: any = {
     Active: "150",
@@ -239,63 +239,63 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "40.1824",
     Long_: "116.4142",
     Province_State: "Beijing",
-    Recovered: ""
+    Recovered: "",
   };
   France_Obj: any = {
     Active: "0",
     Admin2: "",
     Combined_Key: "Alberta, Canada",
     Confirmed: "",
-    Country_Region: "Canada",
+    Country_Region: "France",
     Deaths: "",
     FIPS: "",
     Last_Update: "2020-03-25 23:37:36",
     Lat: "53.9333",
     Long_: "-116.5765",
     Province_State: "Alberta",
-    Recovered: ""
+    Recovered: "",
   };
   Australia_Obj: any = {
     Active: "22",
     Admin2: "",
     Combined_Key: "French Guiana, France",
     Confirmed: "",
-    Country_Region: "France",
+    Country_Region: "Australia",
     Deaths: "",
     FIPS: "",
     Last_Update: "2020-03-25 23:33:04",
     Lat: "4.0",
     Long_: "-53.0",
     Province_State: "French Guiana",
-    Recovered: ""
+    Recovered: "",
   };
   UnitedKingdom_Obj: any = {
     Active: "39",
     Admin2: "",
     Combined_Key: "Australian Capital Territory, Australia",
     Confirmed: "",
-    Country_Region: "Australia",
+    Country_Region: "United Kingdom",
     Deaths: "",
     FIPS: "",
     Last_Update: "2020-03-25 23:37:49",
     Lat: "-35.4735",
     Long_: "149.0124",
     Province_State: "Australian Capital Territory",
-    Recovered: ""
+    Recovered: "",
   };
   Canada_Obj: any = {
     Active: "7",
     Admin2: "",
     Combined_Key: "Bermuda, United Kingdom",
     Confirmed: "",
-    Country_Region: "United Kingdom",
+    Country_Region: "Canada",
     Deaths: "",
     FIPS: "",
     Last_Update: "2020-03-25 23:33:04",
     Lat: "32.3078",
     Long_: "-64.7505",
     Province_State: "Bermuda",
-    Recovered: ""
+    Recovered: "",
   };
   RU_Obj: any = {
     code: "RU",
@@ -310,7 +310,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "33.78686685",
     Long_: "-98.20771198",
     Province_State: "Texas",
-    Recovered: ""
+    Recovered: "",
   };
   AF_Obj: any = {
     code: "AF",
@@ -325,7 +325,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "33.78686685",
     Long_: "-98.20771198",
     Province_State: "",
-    Recovered: ""
+    Recovered: "",
   };
   IR_Obj: any = {
     code: "IR",
@@ -340,7 +340,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "33.78686685",
     Long_: "-98.20771198",
     Province_State: "",
-    Recovered: ""
+    Recovered: "",
   };
   IQ_Obj: any = {
     code: "IQ",
@@ -355,7 +355,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
     Lat: "33.78686685",
     Long_: "-98.20771198",
     Province_State: "",
-    Recovered: ""
+    Recovered: "",
   };
 
   // *************************************************************************************************************//
@@ -516,7 +516,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
         property: "fill",
         target: worldSeries.mapPolygons.template,
         min: am4core.color("#8AB4F8"),
-        max: am4core.color("#174EA6")
+        max: am4core.color("#174EA6"),
       });
 
       // Set up data for countries
@@ -542,7 +542,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
                 //   continents[country.continent_code]
                 // ),
                 map: country.maps[0],
-                country: country.country
+                country: country.country,
               };
               obj["value"] = element.Confirmed;
               obj["Recovered"] = element.Recovered;
@@ -560,7 +560,7 @@ export class LatestDataComponent implements OnInit, OnDestroy {
       chart.zoomControl = new am4maps.ZoomControl();
 
       let homeButton = new am4core.Button();
-      homeButton.events.on("hit", function() {
+      homeButton.events.on("hit", function () {
         worldSeries.show();
         // countrySeries.show();
         chart.goHome();
