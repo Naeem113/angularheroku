@@ -51,12 +51,7 @@ export class AppServicesService {
       console.log(this.IP);
     });
     console.log(this.currentMounth, this.currentDay);
-    // setTimeout(() => {
-    // console.log(this.IP);
-    //   this.getcountry().subscribe(res => {
-    //     console.log(res);
-    //   });
-    // }, 3000);
+   
   }
 
   // *************************************************************************************************************//
@@ -83,3 +78,11 @@ export class AppServicesService {
     return this.http.get(this.AllLocation_URL, { responseType: "text" });
   }
 }
+
+
+ // setTimeout(() => {
+    // console.log(this.IP);
+    //   this.getcountry().subscribe(res => {
+    //     console.log(res);
+    //   });
+    // }, 3000);
